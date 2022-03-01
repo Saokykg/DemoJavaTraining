@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4a3881d7-9c9e-475f-b8fa-8340ae3e5a47" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/app.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/Animals.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/Cats.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/Dogs.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/EnumSex.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/Frogs.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/ISound.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/Kittens.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai3/src/main/java/models/TomCats.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/controller/AvgAgeAnimal.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Animal.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Cat.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Dog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Frog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/ISound.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Kitten.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Sex.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/Tomcats.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/module-info.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/view/AnimalMainClass.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo17022022/nbactions.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo17022022/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo17022022/src/main/java/com/tma/demo/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo17022022/src/main/java/demo/demo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo17022022/src/main/java/demo/sumArray.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo17022022/src/main/java/demo/test1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/nbactions.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/dis.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/controller/BatteryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/controller/CallController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/controller/DisplayController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/controller/GSMController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/model/Battery.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/model/Call.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/model/Display.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/model/EnumShare.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/model/GSM.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/view/NewClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/com/tma/view/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo21022022/src/main/java/savefile/dis.txt" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="25mDcHY75K3exjG3qDR5gRowXbR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../bai1" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4a3881d7-9c9e-475f-b8fa-8340ae3e5a47" name="Changes" comment="" />
+      <created>1646123445948</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1646123445948</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
