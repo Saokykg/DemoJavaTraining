@@ -6,6 +6,7 @@ public class SoftDrink extends Drink{
     public SoftDrink(){
         this.setType(Enum.drinkType.SOFTDRINK);
     }
+
     public SoftDrink(String name, String des, String img, double price){
         super(name, des, img, price);
         this.setType(Enum.drinkType.SOFTDRINK);

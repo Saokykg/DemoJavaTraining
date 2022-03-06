@@ -30,11 +30,7 @@ public class Bill {
     }
 
     public void setOrder(List<OrderDetails> order) {
-        List<OrderDetails> list = new ArrayList<>();
-        for (OrderDetails od : order){
-            list.add(od);
-        }
-        this.order = list;
+        this.order = new ArrayList<>(order);
     }
 
     public LocalDate getDate() {

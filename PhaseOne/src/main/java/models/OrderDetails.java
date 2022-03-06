@@ -4,7 +4,7 @@ public class OrderDetails {
     private Menu menu;
     private int amount;
 
-    public OrderDetails(){};
+    public OrderDetails(){}
     public OrderDetails(Menu menu){
         this.setMenu(menu);
         this.setAmount(1);

@@ -1,12 +1,11 @@
 package controller;
 
-import models.Drink;
 import models.Food;
 import models.Server;
 import view.ServerView;
 
 public class ServerController {
-    private ServerView view;
+    private final ServerView view;
 
     public ServerController(ServerView view){
         this.view = view;

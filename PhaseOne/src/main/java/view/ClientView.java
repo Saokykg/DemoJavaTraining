@@ -2,15 +2,12 @@ package view;
 
 import models.*;
 
-import java.sql.Struct;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class ClientView {
 
     private void showHeader(){
-        System.out.println(String.format("\n%-5s %-20s %-50s %-20s %-10s %-10s", "ID", "Name", "Description", "Image", "Price", "Type"));
+        System.out.printf("\n%-5s %-20s %-50s %-20s %-10s %-10s%n", "ID", "Name", "Description", "Image", "Price", "Type");
     }
 
     Scanner scanner = new Scanner(System.in);
@@ -65,8 +62,6 @@ public class ClientView {
         }
     }
     public void showBillHistory(){
-        Client.billList.forEach((b)->{
-            System.out.println(b);
-        });
+        Client.billList.forEach(System.out::println);
     }
 }

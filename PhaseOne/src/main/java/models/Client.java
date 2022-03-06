@@ -11,7 +11,7 @@ public class Client {
     public void addOrder(Menu order){
         boolean kt = false;
         for (OrderDetails o : currentOrder){
-            if (o.equals(order)) {
+            if (o.getMenu().equals(order)) {
                 kt = true;
                 o.setAmount(o.getAmount() + 1);
                 break;
@@ -36,9 +36,7 @@ public class Client {
         currentOrder.remove(order);
     }
 
-    public void cancelOrder(int id){
-
-    }
+//    public void cancelOrder(int id){}
 
     public void clearOrder(){
         currentOrder.clear();

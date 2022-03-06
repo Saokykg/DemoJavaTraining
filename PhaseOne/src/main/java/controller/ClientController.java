@@ -5,23 +5,14 @@ import view.ClientView;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 
 public class ClientController {
-    private ClientView view;
+    private final ClientView view;
     Client client = new Client();
 
     public ClientController(ClientView view){
         this.view = view;
     }
-//        System.out.println("1. list");
-//        System.out.println("2. list food menu");
-//        System.out.println("3. list drink menu");
-//        System.out.println("4. Ordering");
-//        System.out.println("5. List order");
-//        System.out.println("6. Confirm order");
-//        System.out.println("7. Bill history");
-//        System.out.println("0. Exit");
     public void access(){
         while (true) {
             int choice = view.choseFunction();
@@ -37,10 +28,6 @@ public class ClientController {
                     break;
                 case 4:
                     OrderDetails orderDetails = view.ordering();
-//                    Client.currentOrder.forEach((o)->{
-//                        if (o.getMenu().equals(orderDetails.getMenu()))
-//                            client.addOrder();
-//                    });
                     client.addOrder(orderDetails);
                     break;
                 case 5:
@@ -52,7 +39,7 @@ public class ClientController {
                         break;
                     }
                     Bill bill = new Bill();
-                    Double tp = 0.0;
+                    double tp = 0.0;
                     for (OrderDetails order : Client.currentOrder){
                         tp += order.getAmount() * order.getMenu().getPrice();
                     }

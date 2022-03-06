@@ -5,7 +5,7 @@ import view.MainView;
 import view.ServerView;
 
 public class MainController {
-    private MainView view;
+    private final MainView view;
     public MainController(MainView view) {
         this.view = view;
     }

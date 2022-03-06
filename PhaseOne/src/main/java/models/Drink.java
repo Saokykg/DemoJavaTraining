@@ -1,7 +1,6 @@
 package models;
 
 public class Drink extends Menu{
-    public static int counter = 0;
     protected Enum.drinkType type;
 
     public Drink(){}
