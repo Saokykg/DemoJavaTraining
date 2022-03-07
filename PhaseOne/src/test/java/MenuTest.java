@@ -1,6 +1,6 @@
+import org.junit.*;
 
 public class MenuTest {
-    public void test(){
 
-    }
+
 }

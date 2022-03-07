@@ -1,7 +1,6 @@
 package com.tma.views;
 
-import com.tma.controller.CallController;
-import com.tma.controller.GSMController;
+import com.tma.controller.MainController;
 import com.tma.utils.Call;
 import com.tma.utils.GSM;
 
@@ -89,7 +88,7 @@ public class GSMMenu {
             System.out.print("Dialed number: ");
             String dialed = sc.readLine();
 
-            CallController callControl = new CallController();
+            MainController callControl = new MainController();
             Call call = callControl.add(duration, dialed);
             this.gsm.createCall(call);
             System.out.println();

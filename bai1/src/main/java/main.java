@@ -65,7 +65,14 @@ public class main {
 
         MainMenu mainMenu = new MainMenu();
         mainMenu.mainMenu();
-
+//
+//        Display dis = new Display(11, 22);
+//        System.out.println(dis);
+//        Display dis2 = new Display(111, 222);
+//        System.out.println(dis);
+//        System.out.println(dis2);
+//        Display dis3 = new Display(1111, 2222);
+//        System.out.println(dis3);
     }
 }
 

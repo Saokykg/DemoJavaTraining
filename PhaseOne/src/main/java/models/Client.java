@@ -8,7 +8,7 @@ public class Client {
     public static List<OrderDetails> currentOrder = new ArrayList<>();
 
 
-    public void addOrder(Menu order){
+    public void addOrder(MenuItems order){
         boolean kt = false;
         for (OrderDetails o : currentOrder){
             if (o.getMenu().equals(order)) {
@@ -61,4 +61,5 @@ public class Client {
     public void setCurrentOrder(List<OrderDetails> currentOrder) {
         Client.currentOrder = currentOrder;
     }
+
 }

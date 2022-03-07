@@ -4,7 +4,47 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe96d7c9-9105-470f-8746-087311246386" name="Changes" comment="" />
+    <list default="true" id="fe96d7c9-9105-470f-8746-087311246386" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../PhaseOne/src/input/input.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PhaseOne/src/test/java/BillModelTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PhaseOne/src/test/java/DrinkModelTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PhaseOne/src/test/java/FoodModelTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../bai1/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Exercercise_Phase1_Animal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Exercercise_Phase1_Animal/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/app.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/app.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/controller/ServerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Alcohol.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Alcohol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Drink.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Drink.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Food.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Food.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/MenuItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/OrderDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/OrderDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/SoftDrink.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/models/SoftDrink.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/view/ClientView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/view/ClientView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/main/java/view/ServerView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/main/java/view/ServerView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PhaseOne/src/test/java/MenuTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../PhaseOne/src/test/java/MenuTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai1/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../bai1/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai1/src/main/java/com/tma/controller/CallController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai1/src/main/java/com/tma/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai1/src/main/java/com/tma/views/GSMMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai1/src/main/java/com/tma/views/GSMMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai1/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai1/src/main/java/main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/GlobalPara.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/GlobalPara.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/HumanInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/HumanInput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/GlobalPara.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/GlobalPara.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/utils/HumanInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/HumanInput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/AvgAge.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/AvgAge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/app.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/app.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/model/Animals.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/model/Animals.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/model/Cats.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/model/Cats.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/model/Dogs.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/model/Dogs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/model/Frogs.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/model/Frogs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/model/Kittens.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/model/Kittens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bai3/src/main/java/model/TomCats.java" beforeDir="false" afterPath="$PROJECT_DIR$/../bai3/src/main/java/model/TomCats.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,6 +63,13 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="25bAQDJjZ1yfPhgFjTocB3VBob5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -32,6 +79,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
   <component name="RunManager">

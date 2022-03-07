@@ -15,7 +15,7 @@ public class Student extends Human implements Comparable<Student>{
 
     @Override
     public int compareTo(Student student) {
-        return this.grade > student.grade ? 0 : 1;
+        return this.grade > student.grade ? 0 : 1; //check -1 0 1 collection.sort
     }
 
     public int getGrade() {

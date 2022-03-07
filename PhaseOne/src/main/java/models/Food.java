@@ -1,6 +1,6 @@
 package models;
 
-public class Food extends Menu{
+public class Food extends MenuItems {
     private Enum.foodType type;
 
     @Override
@@ -8,7 +8,13 @@ public class Food extends Menu{
         return super.toString() + String.format("%-10s ", this.getType());
     }
 
-    public Food(){}
+    public Food(){
+        super();
+    }
+    public Food(Enum.foodType type){
+        super();
+        this.type = type;
+    }
     public Food(String name, String des, String img, double price, Enum.foodType type){
         super(name, des, img, price);
         this.setType(type);

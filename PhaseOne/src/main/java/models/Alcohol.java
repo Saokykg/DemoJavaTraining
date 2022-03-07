@@ -4,7 +4,14 @@ public class Alcohol extends Drink{
     private double concentration;
 
     public Alcohol(){
+        super();
         this.type = Enum.drinkType.ALCOHOL;
+    }
+
+    public Alcohol(double concentration){
+        super();
+        this.type = Enum.drinkType.ALCOHOL;
+        this.concentration = concentration;
     }
 
     public Alcohol(String name, String des, String img, double price, double concentration){

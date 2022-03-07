@@ -4,6 +4,7 @@ public class SoftDrink extends Drink{
 
 
     public SoftDrink(){
+        super();
         this.setType(Enum.drinkType.SOFTDRINK);
     }
 

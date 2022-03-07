@@ -1,5 +1,4 @@
 import model.Animals;
-import model.Cats;
 import model.Struct_1;
 
 import java.util.List;
@@ -16,6 +15,7 @@ public class AvgAge {
         Struct_1 frogs = new Struct_1();
 
         list.forEach((obj)->{
+//            System.out.println(obj.sound());
             if(obj instanceof model.Cats){
                 cats.addAge(obj.getAge());
             }

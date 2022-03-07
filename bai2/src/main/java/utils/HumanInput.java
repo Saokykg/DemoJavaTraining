@@ -11,7 +11,7 @@ public class HumanInput {
         FileInputStream fi = null;
         List<Student> studentList = new ArrayList<>();
         try {
-            fi = new FileInputStream("src/input/student.txt");
+            fi = new FileInputStream("src/input/student.txt"); //const
             int i = 0;
             String tmp = "";
             List<String> student = new ArrayList<>();
@@ -20,7 +20,11 @@ public class HumanInput {
                     case 10:
                         student.add(tmp);
                         tmp = "";
-                        studentList.add(new Student(student.get(0), student.get(1), Integer.parseInt(student.get(2))));
+                        studentList.add(new Student(
+                                student.get(0),
+                                student.get(1),
+                                Integer.parseInt(student.get(2))
+                        ));
                         student.clear();
                         break;
                     case 32:

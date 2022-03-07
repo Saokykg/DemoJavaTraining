@@ -10,7 +10,7 @@ public class ServerView {
     Scanner scanner = new Scanner(System.in);
 
     private void showHeader(){
-        System.out.printf("\n%-5s %-20s %-50s %-20s %-10s %-10s%n", "ID", "Name", "Description", "Image", "Price", "Type");
+        System.out.printf("\n%-5s %-20s %-30s %-30s %-10s %-10s%n", "ID", "Name", "Description", "Image", "Price", "Type");
     }
 
     public int choseFunction(){
@@ -27,14 +27,14 @@ public class ServerView {
 
     public void showMenuList(){
         showHeader();
-        for (Menu o : Server.menuList) {
+        for (MenuItems o : Server.menuList) {
             System.out.println(o);
         }
     }
 
     public void showFoodMenuList(){
         showHeader();
-        for (Menu o : Server.menuList) {
+        for (MenuItems o : Server.menuList) {
             if (o instanceof Food)
                 System.out.println(o);
         }
@@ -42,7 +42,7 @@ public class ServerView {
 
     public void showDrinkMenuList(){
         showHeader();
-        for (Menu o : Server.menuList) {
+        for (MenuItems o : Server.menuList) {
             if (o instanceof Drink)
                 System.out.println(o);
         }

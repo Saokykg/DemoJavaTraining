@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class ClientView {
 
     private void showHeader(){
-        System.out.printf("\n%-5s %-20s %-50s %-20s %-10s %-10s%n", "ID", "Name", "Description", "Image", "Price", "Type");
+        System.out.printf("\n%-5s %-20s %-30s %-30s %-10s %-10s%n", "ID", "Name", "Description", "Image", "Price", "Type");
     }
 
     Scanner scanner = new Scanner(System.in);
@@ -26,14 +26,14 @@ public class ClientView {
 
     public void showMenuList(){
         showHeader();
-        for (Menu o : Server.menuList) {
+        for (MenuItems o : Server.menuList) {
             System.out.println(o);
         }
     }
 
     public void showFoodMenuList(){
         showHeader();
-        for (Menu o : Server.menuList) {
+        for (MenuItems o : Server.menuList) {
             if (o instanceof Food)
                 System.out.println(o);
         }
@@ -41,7 +41,7 @@ public class ClientView {
 
     public void showDrinkMenuList(){
         showHeader();
-        for (Menu o : Server.menuList) {
+        for (MenuItems o : Server.menuList) {
             if (o instanceof Drink)
                 System.out.println(o);
         }
@@ -61,6 +61,7 @@ public class ClientView {
             System.out.println(orderDetails);
         }
     }
+
     public void showBillHistory(){
         Client.billList.forEach(System.out::println);
     }

@@ -5,7 +5,9 @@ import view.MainView;
 import view.ServerView;
 
 public class MainController {
+
     private final MainView view;
+
     public MainController(MainView view) {
         this.view = view;
     }
@@ -13,7 +15,7 @@ public class MainController {
     public void start(){
         while (true) {
             switch (view.getMainMenu()) {
-                case 1:
+                case 1: //const serverIdx = x
                     ServerView serverView = new ServerView();
                     ServerController serverController = new ServerController(serverView);
                     serverController.access();

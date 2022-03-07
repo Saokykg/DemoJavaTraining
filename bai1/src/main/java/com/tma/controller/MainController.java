@@ -10,8 +10,8 @@ import com.tma.utils.Call;
  *
  * @author pduonghoa
  */
-public class CallController {
-    public Call add(float duration, String number){
+public class MainController {
+    public Call add(float duration, String number) {
         return new Call(duration, number);
     }
 

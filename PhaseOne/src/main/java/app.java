@@ -1,20 +1,19 @@
 import controller.MainController;
+import controller.ServerController;
 import models.*;
 import models.Enum;
 import view.MainView;
+import view.ServerView;
 
-public class app {
-    public static void main(String[] args) {
-        System.out.printf("%20s %s\n", "hossssssssas", "291873");
-        System.out.printf("%-20s %s\n", "hossssssssa222s", "29187322");
-        System.out.printf("%-20s %s\n", "hossssssssas222", "29187322");
+import java.io.FileNotFoundException;
+
+public class app { //rest application
+    public static void main(String[] args) throws FileNotFoundException {
+
+        ServerController serverController = new ServerController(new ServerView());
+        serverController.input("src/input/input.txt");
 
 
-        Alcohol d = new Alcohol("Voca", "nong do con cao", "https://img.com.vn",  3000000, 40);
-
-        Food f = new Food("trung chien", "thom ngon bo duong", "https://img2.com.vn",  10000, Enum.foodType.BREAKFAST);
-
-        Server.menuList.add(f);
         MainView view = new MainView();
         MainController mainController = new MainController(view);
         mainController.start();

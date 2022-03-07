@@ -1,11 +1,11 @@
 package models;
 
 public class OrderDetails {
-    private Menu menu;
+    private MenuItems menu;
     private int amount;
 
     public OrderDetails(){}
-    public OrderDetails(Menu menu){
+    public OrderDetails(MenuItems menu){
         this.setMenu(menu);
         this.setAmount(1);
     }
@@ -19,11 +19,11 @@ public class OrderDetails {
                     this.getMenu().getPrice() * this.getAmount());
     }
 
-    public Menu getMenu() {
+    public MenuItems getMenu() {
         return menu;
     }
 
-    public void setMenu(Menu menu) {
+    public void setMenu(MenuItems menu) {
         this.menu = menu;
     }
 

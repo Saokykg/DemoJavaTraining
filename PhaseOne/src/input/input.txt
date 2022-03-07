@@ -1,0 +1,12 @@
+ALCOHOL, Volka, volka 50, https://www.volka.com/, 100000, 50
+ALCOHOL, 333, description_333, https://www.333.com/, 20000, 70
+ALCOHOL, Rum, , https://www.rum.com/, 400000, 80
+SOFTDRINK, Cacao, softdrink_1, https://www.cacao.com/, 20000
+SOFTDRINK, Cafe, softdrink_2, https://www.cafe.com/, 15000
+SOFTDRINK, Sting, softdrink_3, https://www.sting.com/, 10000
+LUNCH, Omurai, description_1, https://www.omurai.com/, 25000
+LUNCH, Special Omurai, description_2, https://www.Somurai.com/, 35000
+LUNCH, Hamburger, description_3, https://www.hambur.com/, 25000
+DINNER, Ramen, description_1, https://www.ramen.com/, 60000
+BREAKFAST, Hot dog, description_2, https://www.dog.com/, 20000
+SOFTDRINK, Soju, Korean, https://www.soju.com/, 40000 , 80

@@ -1,17 +1,17 @@
 package models;
 
-public abstract class Menu {
-    private static int counter = 0;
+public abstract class MenuItems { //MenuItems
+    private static int counter = 1;
     private int id;
     private String name;
     private String descripton;
     private String image;
     private double price;
 
-    public Menu(){
+    public MenuItems(){
         this.setId(counter++);
     }
-    public Menu(String name, String des, String img, double price){
+    public MenuItems(String name, String des, String img, double price){
         this.setId(counter++);
         this.setName(name);
         this.setDescripton(des);
@@ -21,7 +21,7 @@ public abstract class Menu {
 
     @Override
     public String toString() {
-        return String.format("%-4d: %-20s %-50s %-20s %-10.2f ",this.getId(), this.getName(), this.getDescripton(), this.getImage(), this.getPrice());
+        return String.format("%-4d: %-20s %-30s %-30s %-10.2f ",this.getId(), this.getName(), this.getDescripton(), this.getImage(), this.getPrice());
     }
 
     public int getId() {

@@ -4,6 +4,7 @@ public abstract class Animals implements ISound{
     private String name;
     private int age;
     private EnumSex.Sex sex;
+    protected String sound;
 
     public Animals(String name, int age, EnumSex.Sex sex){
         this.name = name;
@@ -21,7 +22,7 @@ public abstract class Animals implements ISound{
 
     @Override
     public String sound(){
-        return "";
+        return this.sound;
     }
 
     public String getName() {

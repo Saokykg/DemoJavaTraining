@@ -1,9 +1,9 @@
 package models;
 
-public class Drink extends Menu{
+public class Drink extends MenuItems {
     protected Enum.drinkType type;
 
-    public Drink(){}
+    public Drink(){super();}
     public Drink(String name, String des, String img, double price){
         super(name, des, img, price);
     }

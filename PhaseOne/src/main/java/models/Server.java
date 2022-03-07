@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    public static List<Menu> menuList = new ArrayList<>();
+    public static List<MenuItems> menuList = new ArrayList<>();
 
-    public static Menu get(int id){
-        for (Menu o : menuList){
+    public static MenuItems get(int id){
+        for (MenuItems o : menuList){
             if (o.getId() == id)
                 return o;
         }
         return null;
     }
+
 }

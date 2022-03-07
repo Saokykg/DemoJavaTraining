@@ -38,5 +38,6 @@ public class app {
 
         AvgAge controller = new AvgAge();
         controller.CalculatorAvgAge(list);
+
     }
 }
