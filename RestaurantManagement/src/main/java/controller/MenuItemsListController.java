@@ -8,10 +8,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class ServerController {
+public class MenuItemsListController {
     private final ServerView view;
 
-    public ServerController(ServerView view){
+    public MenuItemsListController(ServerView view){
         this.view = view;
     }
 
@@ -30,13 +30,29 @@ public class ServerController {
                     break;
                 case 4:
                     Food food = view.addFood();
-                    Server.menuList.add(food);
+                    MenuItemsList.addItem(food);
                     break;
                 case 5:
-                    Server.menuList.add(view.addDrink());
+                    MenuItemsList.addItem(view.addDrink());
                     break;
                 case 6:
-                    Server.menuList.remove(Server.get(view.deleteMenuItem()));
+                    MenuItems deleteItems = null;
+                    int choiceId;
+                    do {
+                        choiceId = view.deleteMenuItem();
+                        if (choiceId == 0)
+                            break;
+                        for (MenuItems menuItems : MenuItemsList.menuList) {
+                            if (choiceId == menuItems.getId()) {
+                                deleteItems = menuItems;
+                                break;
+                            }
+                        }
+                        if (deleteItems == null)
+                            System.out.println("Id not found\nInput again"); //cant find item with id user input
+                    }while(deleteItems != null);
+                    if (choiceId != 0)
+                        MenuItemsList.removeItem(deleteItems);
                     break;
                 case 7:
                     break;
@@ -53,7 +69,7 @@ public class ServerController {
         Scanner scanner = new Scanner(file);
         while(scanner.hasNextLine()){
             String reader = scanner.nextLine();
-            String info[] = reader.split(", ");
+            String[] info = reader.split(", ");
             MenuItems menu = null;
             switch (info[0]){
                 case "SOFTDRINK":
@@ -85,7 +101,7 @@ public class ServerController {
             }catch (NumberFormatException | NullPointerException ex){
                 ex.printStackTrace();
             }
-            Server.menuList.add(menu);
+            MenuItemsList.menuList.add(menu);
         }
     }
 }

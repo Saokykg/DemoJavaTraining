@@ -6,9 +6,15 @@ public class OrderDetails {
 
     public OrderDetails(){}
     public OrderDetails(MenuItems menu){
-        this.setMenu(menu);
-        this.setAmount(1);
+        this.menu = menu;
+        this.amount = 1;
     }
+
+    public OrderDetails(MenuItems menu, int amount){
+        this.menu = menu;
+        this.amount = amount;
+    }
+
 
     @Override
     public String toString() {

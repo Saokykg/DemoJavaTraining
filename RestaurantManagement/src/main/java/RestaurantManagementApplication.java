@@ -1,5 +1,5 @@
 import controller.MainController;
-import controller.ServerController;
+import controller.MenuItemsListController;
 import view.MainView;
 import view.ServerView;
 
@@ -8,8 +8,8 @@ import java.io.FileNotFoundException;
 public class RestaurantManagementApplication { //rest application
     public static void main(String[] args) throws FileNotFoundException {
 
-        ServerController serverController = new ServerController(new ServerView());
-        serverController.input("src/input/input.txt");
+        MenuItemsListController menuItemsListController = new MenuItemsListController(new ServerView());
+        menuItemsListController.input("src/input/input.txt");
 
 
         MainView view = new MainView();

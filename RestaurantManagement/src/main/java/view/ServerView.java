@@ -27,14 +27,14 @@ public class ServerView {
 
     public void showMenuList(){
         showHeader();
-        for (MenuItems o : Server.menuList) {
+        for (MenuItems o : MenuItemsList.menuList) {
             System.out.println(o);
         }
     }
 
     public void showFoodMenuList(){
         showHeader();
-        for (MenuItems o : Server.menuList) {
+        for (MenuItems o : MenuItemsList.menuList) {
             if (o instanceof Food)
                 System.out.println(o);
         }
@@ -42,7 +42,7 @@ public class ServerView {
 
     public void showDrinkMenuList(){
         showHeader();
-        for (MenuItems o : Server.menuList) {
+        for (MenuItems o : MenuItemsList.menuList) {
             if (o instanceof Drink)
                 System.out.println(o);
         }
@@ -105,7 +105,7 @@ public class ServerView {
     }
 
     public int deleteMenuItem(){
-        System.out.print("Input id to delete: ");
+        System.out.print("Input id to delete(input 0 to cancel): ");
         return Integer.parseInt(scanner.nextLine());
     }
 

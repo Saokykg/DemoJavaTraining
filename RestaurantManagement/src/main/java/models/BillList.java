@@ -3,12 +3,17 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Client {
+public class BillList {
     public static List<Bill> billList = new ArrayList<>();
     public static List<OrderDetails> currentOrder = new ArrayList<>();
 
+    private BillList(){}
 
-    public void addOrder(MenuItems order){
+    public static String[] getHeader(){
+        return new String[]{"Date", "Time", "Total price"};
+    }
+
+    public static void addOrder(MenuItems order){
         boolean kt = false;
         for (OrderDetails o : currentOrder){
             if (o.getMenu().equals(order)) {
@@ -22,7 +27,7 @@ public class Client {
         }
     }
 
-    public void addOrder(OrderDetails orderDetails){
+    public static void addOrder(OrderDetails orderDetails){
         for (OrderDetails orderDetails1 : currentOrder){
             if (orderDetails1.getMenu().equals(orderDetails.getMenu())){
                 orderDetails1.setAmount(orderDetails.getAmount() + orderDetails1.getAmount());
@@ -32,34 +37,34 @@ public class Client {
         currentOrder.add(orderDetails);
     }
 
-    public void cancelOrder(OrderDetails order){
+    public static void editOrder(OrderDetails order){
         currentOrder.remove(order);
     }
 
-//    public void cancelOrder(int id){}
+//    public static void cancelOrder(int id){}
 
-    public void clearOrder(){
+    public static void clearOrder(){
         currentOrder.clear();
     }
 
-    public void addBill(Bill bill){
+    public static void addBill(Bill bill){
         billList.add(bill);
     }
 
-    public List<Bill> getBillList() {
+    public static List<Bill> getBillList() {
         return billList;
     }
 
-    public void setBillList(List<Bill> billList) {
-        Client.billList = billList;
+    public static void setBillList(List<Bill> billList) {
+        BillList.billList = billList;
     }
 
-    public List<OrderDetails> getCurrentOrder() {
+    public static List<OrderDetails> getCurrentOrder() {
         return currentOrder;
     }
 
     public void setCurrentOrder(List<OrderDetails> currentOrder) {
-        Client.currentOrder = currentOrder;
+        BillList.currentOrder = currentOrder;
     }
 
 }

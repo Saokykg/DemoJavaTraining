@@ -11,6 +11,21 @@ public class Bill {
     private LocalTime time;
     private Double totalPrice;
 
+
+    public Bill(List<OrderDetails> order){
+        this.order = order;
+        double tp = 0.0;
+        for (OrderDetails o : this.order){
+            tp += o.getAmount() * o.getMenu().getPrice();
+        }
+        this.totalPrice = tp;
+        this.date = LocalDate.now();
+        this.time = LocalTime.now();
+    }
+
+    public String[] getStringCsv(){
+        return new String[]{this.date.toString(), this.time.toString(), this.totalPrice.toString()};
+    }
     @Override
     public String toString() {
         StringBuilder myOrder = new StringBuilder();

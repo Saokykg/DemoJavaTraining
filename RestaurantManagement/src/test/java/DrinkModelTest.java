@@ -5,13 +5,10 @@ import models.Enum;
 import models.SoftDrink;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.*;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.nullValue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DrinkModelTest {

@@ -17,13 +17,13 @@ public class MainController {
             switch (view.getMainMenu()) {
                 case 1: //const serverIdx = x
                     ServerView serverView = new ServerView();
-                    ServerController serverController = new ServerController(serverView);
-                    serverController.access();
+                    MenuItemsListController menuItemsListController = new MenuItemsListController(serverView);
+                    menuItemsListController.access();
                     break;
                 case 2:
                     ClientView clientView = new ClientView();
-                    ClientController clientController = new ClientController(clientView);
-                    clientController.access();
+                    BillListController billListController = new BillListController(clientView);
+                    billListController.access();
                     break;
                 case 3:
                     return;
