@@ -1,8 +1,10 @@
 import controller.MainController;
 import controller.MenuItemsListController;
+import models.MenuItems;
 import view.MainView;
 import view.ServerView;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 
 public class RestaurantManagementApplication { //rest application
@@ -10,7 +12,6 @@ public class RestaurantManagementApplication { //rest application
 
         MenuItemsListController menuItemsListController = new MenuItemsListController(new ServerView());
         menuItemsListController.input("src/input/input.txt");
-
 
         MainView view = new MainView();
         MainController mainController = new MainController(view);

@@ -24,7 +24,7 @@ public class RestaurantApplication {
 		int choose;
 		do {
 			System.out.println("Input a number in menu:");
-			choose = scanner.nextInt();
+			choose = Integer.parseInt(scanner.nextLine());
 			scanner.close();
 			switch (choose) {
 				case 0:

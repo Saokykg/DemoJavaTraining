@@ -11,10 +11,12 @@ public class Food extends MenuItems {
     public Food(){
         super();
     }
+
     public Food(Enum.foodType type){
         super();
         this.type = type;
     }
+
     public Food(String name, String des, String img, double price, Enum.foodType type){
         super(name, des, img, price);
         this.setType(type);

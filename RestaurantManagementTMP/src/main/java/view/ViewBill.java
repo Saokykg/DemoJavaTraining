@@ -184,7 +184,7 @@ public class ViewBill {
 			System.out.println("choose 0 to exit!");
 			System.out.println("Choose menu");
 			ViewMenuChoose.chooseMenu();
-			choose = scanner.nextInt();
+			choose = Integer.parseInt(scanner.nextLine());
 
 			switch (choose) {
 			case 1:
