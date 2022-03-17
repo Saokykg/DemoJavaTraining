@@ -18,6 +18,8 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<User> getAllUser(){
-        return new ResponseEntity<User>((User) this.userService.getUsers(), HttpStatus.OK);
+//        List<User> users = this.userService.getUsers();
+        return new ResponseEntity<>(new User()
+                , HttpStatus.OK);
     }
 }

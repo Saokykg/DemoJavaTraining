@@ -1,7 +1,7 @@
 package com.spring.demo.service;
 
 import com.spring.demo.model.User;
-import com.spring.demo.reponsitory.UserReponsitory;
+import com.spring.demo.repository.UserRepository;
 import com.spring.demo.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class UserService implements IUserService {
 
 
     @Autowired
-    private UserReponsitory userRepository;
+    private UserRepository userRepository;
 
     @Override
     public List<User> getUsers() {
