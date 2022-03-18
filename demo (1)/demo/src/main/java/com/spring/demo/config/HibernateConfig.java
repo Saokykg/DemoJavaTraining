@@ -54,12 +54,6 @@ public class HibernateConfig {
         return props;
     }
 
-    @Bean
-    public HibernateTransactionManager transactionManager() {
-        HibernateTransactionManager h = new HibernateTransactionManager();
-        h.setSessionFactory(getSessionFactory().getObject());
-        return h;
-    }
 
 }
 

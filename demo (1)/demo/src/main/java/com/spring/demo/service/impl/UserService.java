@@ -1,8 +1,9 @@
-package com.spring.demo.service;
+package com.spring.demo.service.impl;
 
 import com.spring.demo.model.User;
-import com.spring.demo.repository.UserRepository;
-import com.spring.demo.service.impl.IUserService;
+import com.spring.demo.repository.IUserRepository;
+import com.spring.demo.repository.impl.UserRepository;
+import com.spring.demo.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,8 @@ import java.util.List;
 @Transactional
 public class UserService implements IUserService {
 
-
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @Override
     public List<User> getUsers() {
@@ -24,7 +24,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserById(int id) {
-        return null;
+        return this.userRepository.getUserById(id);
     }
 
     @Override
@@ -40,5 +40,20 @@ public class UserService implements IUserService {
     @Override
     public boolean removeUserById(int id) {
         return false;
+    }
+
+    @Override
+    public Boolean setAccess_Token(User user) {
+        return this.userRepository.setAccess_Token(user);
+    }
+
+    @Override
+    public Boolean vertify(int id, String token) {
+        return this.userRepository.vertify(id, token);
+    }
+
+    @Override
+    public Boolean register(User user) {
+        return this.userRepository.register(user);
     }
 }
