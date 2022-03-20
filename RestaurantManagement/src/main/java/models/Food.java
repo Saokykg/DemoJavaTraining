@@ -1,7 +1,7 @@
 package models;
 
-public class Food extends MenuItems {
-    private Enum.foodType type;
+public class Food extends MenuItem {
+    private ItemsType.foodType type;
 
     @Override
     public String toString() {
@@ -12,21 +12,21 @@ public class Food extends MenuItems {
         super();
     }
 
-    public Food(Enum.foodType type){
+    public Food(ItemsType.foodType type){
         super();
         this.type = type;
     }
 
-    public Food(String name, String des, String img, double price, Enum.foodType type){
+    public Food(String name, String des, String img, double price, ItemsType.foodType type){
         super(name, des, img, price);
         this.setType(type);
     }
 
-    public Enum.foodType getType() {
+    public ItemsType.foodType getType() {
         return type;
     }
 
-    public void setType(Enum.foodType type) {
+    public void setType(ItemsType.foodType type) {
         this.type = type;
     }
 }

@@ -1,26 +1,38 @@
 package models;
 
+import utils.BILLSTATUS;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bill {
+    private static int counter = 1;
+    private int id;
+    private int customerId;
     private List<OrderDetails> order;
-    private LocalDate date;
-    private LocalTime time;
+    private LocalDate date = LocalDate.now();
+    private LocalTime time = LocalTime.now();
     private Double totalPrice;
+    private BILLSTATUS status = BILLSTATUS.ONGOING;
 
+    public Bill(int customerId){
+        this.setId(counter++);
+        this.setCustomerId(customerId);
+    }
+    public Bill(int customerId, List<OrderDetails> orderDetails){
+        this.setId(counter++);
+        this.setCustomerId(customerId);
+        this.setOrder(orderDetails);
+    }
 
-    public Bill(List<OrderDetails> order){
-        this.order = order;
-        double tp = 0.0;
-        for (OrderDetails o : this.order){
-            tp += o.getAmount() * o.getMenu().getPrice();
-        }
-        this.totalPrice = tp;
-        this.date = LocalDate.now();
-        this.time = LocalTime.now();
+    public static int getCounter() {
+        return counter;
+    }
+
+    public static void setCounter(int counter) {
+        Bill.counter = counter;
     }
 
     public String[] getStringCsv(){
@@ -29,7 +41,8 @@ public class Bill {
     @Override
     public String toString() {
         StringBuilder myOrder = new StringBuilder();
-        myOrder.append("-----------------------------------\n");
+        myOrder.append(String.format("------------------%d----------------\n", this.getId()));
+        myOrder.append(String.format("Customer id: %d\n", this.customerId));
         for (OrderDetails o : this.order) {
             myOrder.append(String.format("%-10s  - %-3d\n", o.getMenu().getName(), o.getAmount()));
         }
@@ -46,6 +59,11 @@ public class Bill {
 
     public void setOrder(List<OrderDetails> order) {
         this.order = new ArrayList<>(order);
+        double price = 0.0;
+        for (OrderDetails orderDetails : this.getOrder()) {
+            price += orderDetails.getAmount() * orderDetails.getMenu().getPrice();
+        }
+        this.setTotalPrice(price);
     }
 
     public LocalDate getDate() {
@@ -70,5 +88,29 @@ public class Bill {
 
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public BILLSTATUS getStatus() {
+        return status;
+    }
+
+    public void setStatus(BILLSTATUS status) {
+        this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 }

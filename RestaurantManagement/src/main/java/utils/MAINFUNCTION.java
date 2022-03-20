@@ -2,7 +2,6 @@ package utils;
 
 public enum MAINFUNCTION {
     EXIT,
-    ORDER, // khach hang
+//    ORDER, // khach hang
     BILL, MENU; // manager
-
 }

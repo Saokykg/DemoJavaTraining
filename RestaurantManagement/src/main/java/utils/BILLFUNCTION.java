@@ -1,0 +1,10 @@
+package utils;
+
+public enum BILLFUNCTION {
+    EXIT,
+    SHOW_ALL_BILL,
+    SHOW_ONGOING_BILL,
+    SHOW_FINISHED_BILL,
+    CREATE_NEW_BILL,
+    PAYMENT
+}

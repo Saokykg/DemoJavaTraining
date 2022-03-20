@@ -1,11 +1,16 @@
 package models;
 
-public class Drink extends MenuItems {
-    protected Enum.drinkType type;
+public class Drink extends MenuItem {
+    protected ItemsType.drinkType type;
 
     public Drink(){super();}
-    public Drink(String name, String des, String img, double price){
+    public Drink(ItemsType.drinkType type){
+        super();
+        this.type = type;
+    }
+    public Drink(String name, String des, String img, double price, ItemsType.drinkType type){
         super(name, des, img, price);
+        this.type = type;
     }
 
     @Override
@@ -13,11 +18,11 @@ public class Drink extends MenuItems {
         return super.toString() + String.format("%-10s ", this.getType());
     }
 
-    public Enum.drinkType getType() {
+    public ItemsType.drinkType getType() {
         return type;
     }
 
-    public void setType(Enum.drinkType type) {
+    public void setType(ItemsType.drinkType type) {
         this.type = type;
     }
 }

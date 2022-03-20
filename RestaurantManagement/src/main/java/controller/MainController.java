@@ -1,8 +1,11 @@
 package controller;
 
-import view.ClientView;
+import view.BillView;
 import view.MainView;
-import view.ServerView;
+import view.OrderView;
+import view.MenuView;
+
+import utils.MAINFUNCTION;
 
 public class MainController {
 
@@ -14,21 +17,23 @@ public class MainController {
 
     public void start(){
         while (true) {
-            switch (view.getMainMenu()) {
-                case 1: //const serverIdx = x
-                    ServerView serverView = new ServerView();
-                    MenuItemsListController menuItemsListController = new MenuItemsListController(serverView);
-                    menuItemsListController.access();
+            MAINFUNCTION choice = view.choseFunction();
+            switch (choice) {
+                case MENU:
+                    MenuView menuView = new MenuView();
+                    MenuController menuController = new MenuController(menuView);
+                    menuController.access();
                     break;
-                case 2:
-                    ClientView clientView = new ClientView();
-                    BillListController billListController = new BillListController(clientView);
-                    billListController.access();
+                case BILL:
+                    BillView billView = new BillView();
+                    BillController billController = new BillController(billView);
+                    billController.access();
                     break;
-                case 3:
+                case EXIT:
                     return;
                 default:
-                    throw new AssertionError();
+                    System.out.println("WRONG INPUT");
+                    break;
             }
         }
     }

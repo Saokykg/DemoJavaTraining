@@ -1,20 +1,21 @@
 package view;
 
-import utils.MAINFUNCTION;
+import utils.ITEMFUNCTION;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MainView {
+public class ItemView {
+
     Scanner scanner = new Scanner(System.in);
 
-    public MAINFUNCTION choseFunction(){
+    public ITEMFUNCTION choseFunction(){
         boolean check;
         int choice = -1;
-        MAINFUNCTION chosenFunction = null;
+        ITEMFUNCTION chosenFunction = null;
         do {
             int idx = 0;
-            for (MAINFUNCTION function : MAINFUNCTION.values()) {
+            for (ITEMFUNCTION function : ITEMFUNCTION.values()) {
                 System.out.printf("%d, %s\n",idx++, function);
             }
             System.out.print("Input your choice: ");
@@ -24,14 +25,14 @@ public class MainView {
             }catch (InputMismatchException ex){
                 ex.printStackTrace();
                 check = true;
-                System.out.println("SOMETHING WRONG\nPLS try again!!!");
+                System.out.println("WRONG FORMAT\nPLS try again!!!");
             }
             try {
-                chosenFunction = MAINFUNCTION.values()[choice];
+                chosenFunction = ITEMFUNCTION.values()[choice];
             }catch (ArrayIndexOutOfBoundsException ex){
                 ex.printStackTrace();
                 check = true;
-                System.out.println("SOMETHING WRONG\nPLS try again!!!");
+                System.out.println("WRONG FORMAT\nPLS try again!!!");
             }
             scanner.nextLine();
         }while (check);

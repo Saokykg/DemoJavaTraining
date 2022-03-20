@@ -1,16 +1,16 @@
 package models;
 
 public class OrderDetails {
-    private MenuItems menu;
+    private MenuItem menu;
     private int amount;
 
     public OrderDetails(){}
-    public OrderDetails(MenuItems menu){
+    public OrderDetails(MenuItem menu){
         this.menu = menu;
         this.amount = 1;
     }
 
-    public OrderDetails(MenuItems menu, int amount){
+    public OrderDetails(MenuItem menu, int amount){
         this.menu = menu;
         this.amount = amount;
     }
@@ -25,11 +25,11 @@ public class OrderDetails {
                     this.getMenu().getPrice() * this.getAmount());
     }
 
-    public MenuItems getMenu() {
+    public MenuItem getMenu() {
         return menu;
     }
 
-    public void setMenu(MenuItems menu) {
+    public void setMenu(MenuItem menu) {
         this.menu = menu;
     }
 

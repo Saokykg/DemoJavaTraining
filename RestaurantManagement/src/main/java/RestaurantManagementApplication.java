@@ -1,17 +1,15 @@
 import controller.MainController;
-import controller.MenuItemsListController;
-import models.MenuItems;
+import controller.MenuController;
 import view.MainView;
-import view.ServerView;
+import view.MenuView;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 
 public class RestaurantManagementApplication { //rest application
     public static void main(String[] args) throws FileNotFoundException {
 
-        MenuItemsListController menuItemsListController = new MenuItemsListController(new ServerView());
-        menuItemsListController.input("src/input/input.txt");
+        MenuController menuController = new MenuController(new MenuView());
+        menuController.input("src/input/input.txt");
 
         MainView view = new MainView();
         MainController mainController = new MainController(view);

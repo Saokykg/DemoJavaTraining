@@ -2,16 +2,16 @@ package view;
 
 import models.*;
 
-import java.io.IOException;
 import java.util.Scanner;
 
-public class ClientView {
+public class OrderView {
 
     private void showHeader(){
         System.out.printf("\n%-5s %-20s %-30s %-30s %-10s %-10s%n", "ID", "Name", "Description", "Image", "Price", "Type");
     }
 
     Scanner scanner = new Scanner(System.in);
+    MenuItemList menuItemList = new MenuItemList();
 
     public int choseFunction(){
         System.out.println("1. list full menu");
@@ -36,14 +36,14 @@ public class ClientView {
 
     public void showMenuList(){
         showHeader();
-        for (MenuItems o : MenuItemsList.menuList) {
+        for (MenuItem o : MenuItemList.menuList) {
             System.out.println(o);
         }
     }
 
     public void showFoodMenuList(){
         showHeader();
-        for (MenuItems o : MenuItemsList.menuList) {
+        for (MenuItem o : MenuItemList.menuList) {
             if (o instanceof Food)
                 System.out.println(o);
         }
@@ -51,7 +51,7 @@ public class ClientView {
 
     public void showDrinkMenuList(){
         showHeader();
-        for (MenuItems o : MenuItemsList.menuList) {
+        for (MenuItem o : MenuItemList.menuList) {
             if (o instanceof Drink)
                 System.out.println(o);
         }
@@ -60,40 +60,15 @@ public class ClientView {
     public OrderDetails ordering() {
         OrderDetails orderDetails = new OrderDetails();
         System.out.print("Input id item: ");
-        orderDetails.setMenu(MenuItemsList.get(Integer.parseInt(scanner.nextLine())));
+//        orderDetails.setMenu(MenuItemList.get(Integer.parseInt(scanner.nextLine())));
         System.out.print("Input amount: ");
         orderDetails.setAmount(Integer.parseInt(scanner.nextLine()));
         return orderDetails;
     }
 
-    public void showListCurrentOrder(){
-        int idx = 0;
-        for (OrderDetails orderDetails : BillList.currentOrder){
-            idx++;
-            System.out.printf("%d - %s\n",idx, orderDetails);
-        }
-    }
 
     public void showBillHistory(){
         BillList.billList.forEach(System.out::println);
-    }
-
-    public int selectOrderToEdit(){
-        this.showListCurrentOrder();
-        System.out.print("Enter order idx: ");
-        int choice = -1;
-        boolean  notPass;
-        do {
-            notPass = false;
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException ex){
-                ex.printStackTrace();
-                notPass = true;
-            }
-        }while(notPass);
-
-        return choice;
     }
 
     public int inputNewAmout(OrderDetails order){

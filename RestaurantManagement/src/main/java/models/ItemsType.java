@@ -1,6 +1,6 @@
 package models;
 
-public class Enum {
+public class ItemsType {
 
     public enum foodType{
         BREAKFAST,

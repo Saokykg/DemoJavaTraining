@@ -1,6 +1,5 @@
 import models.*;
-import models.Enum;
-import org.junit.jupiter.api.BeforeEach;
+import models.ItemsType;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -9,31 +8,32 @@ import java.util.List;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MenuListTest {
 
+    MenuItemList menuItemList = new MenuItemList();
     @Test
     @Order(1)
     public void addItemTest(){
-        List<MenuItems> itemListExpected = new ArrayList<>();;
-        itemListExpected.add(new Food("AAA", "des abc","http.com.vn", 2000, Enum.foodType.LUNCH));
-        itemListExpected.add(new Food("BBB", "des abc","http.com.vn", 20030, Enum.foodType.BREAKFAST));
-        itemListExpected.add(new Food("CCC", "des abc","http.com.vn", 20700, Enum.foodType.LUNCH));
-        itemListExpected.add(new Alcohol("ALCOHOL", "des abc","http.com.vn", 111111, 60));
-        itemListExpected.add(new SoftDrink("SoftDrink", "des abc","http.com.vn", 4567));
+        List<MenuItem> itemListExpected = new ArrayList<>();;
+        itemListExpected.add(new Food("AAA", "des abc","http.com.vn", 2000, ItemsType.foodType.LUNCH));
+        itemListExpected.add(new Food("BBB", "des abc","http.com.vn", 20030, ItemsType.foodType.BREAKFAST));
+        itemListExpected.add(new Food("CCC", "des abc","http.com.vn", 20700, ItemsType.foodType.LUNCH));
+        itemListExpected.add(new Drink("ALCOHOL", "des abc","http.com.vn", 111111, ItemsType.drinkType.ALCOHOL));
+        itemListExpected.add(new Drink("SoftDrink", "des abc","http.com.vn", 4567, ItemsType.drinkType.SOFTDRINK));
 
-        for (MenuItems menuItems : itemListExpected) {
-            MenuItemsList.addItem(menuItems);
+        for (MenuItem menuItem : itemListExpected) {
+            menuItemList.addItem(menuItem);
         }
 
-        Assertions.assertFalse(MenuItemsList.getMenuList().isEmpty());
-        Assertions.assertEquals(5, MenuItemsList.getMenuList().size());
-        Assertions.assertTrue(MenuItemsList.getMenuList().containsAll(itemListExpected));
+        Assertions.assertFalse(menuItemList.getMenuList().isEmpty());
+        Assertions.assertEquals(5, menuItemList.getMenuList().size());
+        Assertions.assertTrue(menuItemList.getMenuList().containsAll(itemListExpected));
     }
 
     @Test
     @Order(2)
     public void removeItemTest(){
-        MenuItems removeItem = MenuItemsList.getMenuList().get(3);
-        MenuItemsList.removeItem(removeItem);
-        Assertions.assertEquals(4, MenuItemsList.getMenuList().size());
-        Assertions.assertFalse(MenuItemsList.getMenuList().contains(removeItem));
+        MenuItem removeItem = menuItemList.getMenuList().get(3);
+        menuItemList.removeItem(removeItem);
+        Assertions.assertEquals(4, menuItemList.getMenuList().size());
+        Assertions.assertFalse(menuItemList.getMenuList().contains(removeItem));
     }
 }
