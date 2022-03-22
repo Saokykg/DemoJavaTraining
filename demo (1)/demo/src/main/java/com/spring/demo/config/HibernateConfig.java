@@ -29,7 +29,7 @@ public class HibernateConfig {
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
         LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-        factory.setPackagesToScan("com.spring.demo.model");
+        factory.setPackagesToScan("com.spring.demo.pojos");
         factory.setDataSource(dataSource());
         factory.setHibernateProperties(hibernateProperties());
         return factory;
