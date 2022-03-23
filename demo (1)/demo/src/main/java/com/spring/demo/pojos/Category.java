@@ -1,5 +1,6 @@
 package com.spring.demo.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,15 +9,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 
 @Entity
 @Table(name = "category")
 @Setter
 @Getter
-@ToString
-public class Category {
+public class Category implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,9 @@ public class Category {
 
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "category")
-    private Collection<Product> productCollection;
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    private List<Product> products;
+
 
 }

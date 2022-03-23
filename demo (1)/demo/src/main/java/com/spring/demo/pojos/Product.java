@@ -1,12 +1,17 @@
 package com.spring.demo.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -14,7 +19,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Product {
+public class Product implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +30,16 @@ public class Product {
     private String name;
     private String image;
 
+    @CreationTimestamp
     @Column(name = "created_date")
+    @NotNull
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date createdDate;
 
-    @Column(name = "updated_date")
-    private Date updateddDate;
+    @UpdateTimestamp
+    @Column(name = "updated_date")// ko can thiet
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date updatedDate;
 
     private Boolean active = true;
 
@@ -37,13 +47,20 @@ public class Product {
     @ManyToOne(optional = false)
     private Category category;
 
-    @PrePersist
-    protected void onCreate(){
-        this.createdDate = new Date();
-    }
+    @Transient
+    @NotNull
+    private int cate_id;
 
-    @PreUpdate
-    protected void onUpdate(){
-        this.updateddDate = new Date();
-    }
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+//    private Collection<Comment> commentCollection;
+
+//    @PrePersist
+//    protected void onCreate(){
+//        this.createdDate = new Date();
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate(){
+//        this.updateddDate = new Date();
+//    }
 }
