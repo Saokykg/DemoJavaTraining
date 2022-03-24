@@ -12,24 +12,24 @@ import java.util.function.Function;
 
 public class LogInterceptor extends HandlerInterceptorAdapter {
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
-        long startTime = System.currentTimeMillis();
-        System.out.println("\n-------- LogInterception.preHandle --- ");
-        System.out.println("Request URL: " + request.getRequestURL());
-        if (request.getRequestURL().toString().contains("login"))
-            return true;
-        String requestToken = request.getHeader("authorization");
-        try {
-            System.out.println(Jwts.parser().setSigningKey("123456").parseClaimsJws(requestToken).getBody().toString());
-            return true;
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }response.setStatus(401);
-        response.setHeader("Error","unauthorized");
-        return false;
-    }
+//    @Override
+//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+//            throws Exception {
+//        long startTime = System.currentTimeMillis();
+//        System.out.println("\n-------- LogInterception.preHandle --- ");
+//        System.out.println("Request URL: " + request.getRequestURL());
+//        if (request.getRequestURL().toString().contains("login"))
+//            return true;
+//        String requestToken = request.getHeader("authorization");
+//        try {
+//            System.out.println(Jwts.parser().setSigningKey("123456").parseClaimsJws(requestToken).getBody().toString());
+//            return true;
+//        }catch (Exception ex){
+//            ex.printStackTrace();
+//        }response.setStatus(401);
+//        response.setHeader("Error","unauthorized");
+//        return false;
+//    }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

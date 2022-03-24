@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -25,42 +24,23 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Size(min = 2, max = 255)
-    @NotNull
     private String name;
     private String image;
 
     @CreationTimestamp
-    @Column(name = "created_date")
-    @NotNull
     @Temporal(javax.persistence.TemporalType.DATE)
+    @Column(name = "created_date")
     private Date createdDate;
 
     @UpdateTimestamp
-    @Column(name = "updated_date")// ko can thiet
+    @Column(name = "updated_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
 
     private Boolean active = true;
 
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category category;
 
-    @Transient
-    @NotNull
-    private int cate_id;
-
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-//    private Collection<Comment> commentCollection;
-
-//    @PrePersist
-//    protected void onCreate(){
-//        this.createdDate = new Date();
-//    }
-//
-//    @PreUpdate
-//    protected void onUpdate(){
-//        this.updateddDate = new Date();
-//    }
 }

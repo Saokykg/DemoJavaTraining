@@ -39,7 +39,7 @@ import java.util.Set;
 @ComponentScan(basePackages = {
     "com.spring.demo.controllers",
     "com.spring.demo.repository",
-    "com.spring.demo.service"
+    "com.spring.demo.DAO",
 })
 public class WebApplicationContextConfig implements WebMvcConfigurer {
     @Override

@@ -1,5 +1,6 @@
 package com.spring.demo.repository;
 
+import com.spring.demo.DTO.Request.ProductRequestDTO;
 import com.spring.demo.pojos.Category;
 import com.spring.demo.pojos.Product;
 

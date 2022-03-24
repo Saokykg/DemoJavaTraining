@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1")
 public class AdminController {
 
     @Autowired

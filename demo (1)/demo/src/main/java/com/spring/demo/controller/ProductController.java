@@ -1,5 +1,9 @@
 package com.spring.demo.controller;
 
+import com.spring.demo.DTO.Mapping.ProductMapper;
+import com.spring.demo.DTO.Request.ProductRequestDTO;
+import com.spring.demo.DTO.Response.ProductReponseDTO;
+import com.spring.demo.DTO.Response.ResponseDTO;
 import com.spring.demo.pojos.Product;
 import com.spring.demo.service.ICategoryService;
 import com.spring.demo.service.IProductService;
@@ -13,6 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
+@RequestMapping("/api/v1")
 public class ProductController {
 
     @Autowired
@@ -21,26 +26,33 @@ public class ProductController {
     @Autowired
     private ICategoryService categoryService;
 
-    @GetMapping("/product")
-    public ResponseEntity<List<Product>> getProduct(){
-        List<Product> productList = this.productService.getFullList();
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+    @PostMapping("/products/get")
+    public ResponseEntity<ResponseDTO> getProduct(){
+        List<ProductReponseDTO> dtoList = this.productService.getFullList();
+        ResponseDTO responseDTO = new ResponseDTO(200, dtoList);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<Product> getById(@PathVariable(value = "productId") int productId){
-        Product product = this.productService.getById(productId);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    @PostMapping("/products/{productId}/get")
+    public ResponseEntity<ResponseDTO> getById(@PathVariable int productId){
+        ProductReponseDTO productDTO = this.productService.getById(productId);
+        ResponseDTO responseDTO = new ResponseDTO(200, productDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-//    @PostMapping("/product")
-//    public ResponseEntity<Product> create(@Valid @RequestBody Product product){
-//        return new ResponseEntity<>(this.productService.create(product), HttpStatus.CREATED);
-//    }
+    @PostMapping("/products/create")
+    public ResponseEntity<ResponseDTO> create(@Valid @RequestBody ProductRequestDTO product){
+        ProductReponseDTO productDTO = this.productService.create(product);
+        ResponseDTO responseDTO = new ResponseDTO(200, productDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
 
-    @PutMapping("/product")
-    public ResponseEntity<Product> update(@Valid @RequestBody Product product){
-        product.setCategory(this.categoryService.getById(product.getCate_id()));
-        return new ResponseEntity<>(this.productService.update(product), HttpStatus.OK);
+    @PostMapping("/products/{productId}/update")
+    public ResponseEntity<ResponseDTO> update(@PathVariable int productId,
+            @Valid @RequestBody ProductRequestDTO product){
+        product.setId(productId);
+        ProductReponseDTO productDTO = this.productService.update(product);
+        ResponseDTO responseDTO = new ResponseDTO(200, productDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }
