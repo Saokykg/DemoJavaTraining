@@ -43,4 +43,7 @@ public class Product implements Serializable {
     @ManyToOne(optional = false)
     private Category category;
 
+    public Product(){
+        setActive(true);
+    }
 }

@@ -1,6 +1,7 @@
 package com.spring.demo.repository.impl;
 
 import com.spring.demo.DAO.ICategoryDAO;
+import com.spring.demo.DAO.IProductDAO;
 import com.spring.demo.DAO.impl.CategoryDAO;
 import com.spring.demo.DAO.impl.ProductDAO;
 import com.spring.demo.pojos.Category;
@@ -25,6 +26,9 @@ public class CategoryRepository implements ICategoryRepository {
 
     @Autowired
     private ICategoryDAO categoryDAO;
+
+    @Autowired
+    private IProductDAO productDAO;
 
     @Override
     public List<Category> getFullList() {
@@ -72,7 +76,6 @@ public class CategoryRepository implements ICategoryRepository {
 
     @Override
     public Product addProduct(Product product) {
-        ProductDAO productDAO = new ProductDAO();
         productDAO.create(product);
         return product;
     }

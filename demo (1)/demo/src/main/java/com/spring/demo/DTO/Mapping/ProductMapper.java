@@ -29,11 +29,11 @@ public class ProductMapper {
     }
 
     public Product dtoToEntity(ProductRequestDTO dto){
+        System.out.println(categoryDAO.get(1));
         Product entity = new Product();
         entity.setId(dto.getId());
         entity.setName(dto.getName());
         entity.setImage(dto.getImage());
-        entity.setActive(dto.getActive());
         entity.setCreatedDate(dto.getCreatedDate());
         entity.setUpdatedDate(dto.getUpdatedDate());
         return entity;

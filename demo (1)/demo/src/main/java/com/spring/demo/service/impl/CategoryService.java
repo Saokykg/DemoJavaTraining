@@ -72,8 +72,10 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public ProductReponseDTO addProduct(ProductRequestDTO dto) {
+
         Product product = ProductMapper.getInstance().dtoToEntity(dto);
         product.setCategory(this.categoryRepository.getById(dto.getCategory_id()));
+        
         return ProductMapper.getInstance().entityToDto(this.categoryRepository.addProduct(product));
     }
 }
