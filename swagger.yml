@@ -531,7 +531,7 @@ paths:
           required: true
           schema:
             type: number
-            default: 1
+            default: 0
         - name: rows
           in: query
           description: |
@@ -543,7 +543,9 @@ paths:
         - name: fl
           in: query
           description: |
-            The fields to include in the response. For example, the fl=title,author,price parameter would include only the title, author, and price fields in the response.
+            The fl parameter limits the information included in a query response to a specified list of fields. The fields must be either stored="true" or docValues="true"
+            
+            The field list can be specified as a space-separated or comma-separated list of field names. The string "score" can be used to indicate that the score of each document for the particular query should be returned as a field. The wildcard character * selects all the fields in the document which are either stored="true" or docValues="true" and useDocValuesAsStored="true" (which is the default when docValues are enabled). You can also add pseudo-fields, functions and transformers to the field list request.
           required: false
           schema:
             type: string
@@ -554,6 +556,14 @@ paths:
           required: false
           schema:
             type: string
+            default: json
+            enum:
+              - json
+              - xml
+              - python
+              - php
+              - csv
+              - ruby
       responses:
         '200':
           description: Successful operation
