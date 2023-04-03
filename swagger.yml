@@ -19,19 +19,15 @@ tags:
     description: A collection is a single logical index that uses a single Solr configuration file and a single index schema.
     externalDocs:
       description: Find out more
-      url: https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-node-management.html
-  - name: pet
-    description: Everything about your Pets
+      url: https://solr.apache.org/guide/8_11/cluster-node-management.html
+  - name: query
+    description: |
+      Solr supports several query parsers, offering search application designers great flexibility in controlling how queries are parsed.
+
+      This section explains how to specify the query parser to be used. It also describes the syntax and features supported by the main query parsers included with Solr and describes some other parsers that may be useful for particular situations. There are some query parameters common to all Solr parsers.
     externalDocs:
       description: Find out more
-      url: http://swagger.io
-  - name: store
-    description: Access to Petstore orders
-    externalDocs:
-      description: Find out more about our store
-      url: http://swagger.io
-  - name: user
-    description: Operations about user
+      url: https://solr.apache.org/guide/8_11/common-query-parameters.html
     
 components:
   securitySchemes:
@@ -51,13 +47,6 @@ paths:
       summary: Create collection
       description: The CREATE action is used to create new collection of data.
       parameters:
-        - name: Authorization
-          in: header
-          description: Your authentication token
-          required: true
-          schema:
-            type: string
-            default: input your token
         - name: name
           in: query
           description: The name of the collection to be created.
@@ -280,13 +269,6 @@ paths:
       description: The RELOAD action is used when you have changed a configuration in ZooKeeper.
       operationId: reloadCollection
       parameters:
-        - name: Authorization
-          in: header
-          description: Your authentication token
-          required: true
-          schema:
-            type: string
-            default: input your token
         - name: name
           in: query
           description: The name of the collection to reload. This parameter is required.
@@ -319,13 +301,6 @@ paths:
         An attribute can be deleted by passing an empty value. For example, yet_another_attribute_name= (with no value) will delete the yet_another_attribute_name parameter from the collection.
       operationId: modifyCollection
       parameters:
-        - name: Authorization
-          in: header
-          description: Your authentication token
-          required: true
-          schema:
-            type: string
-            default: input your token
         - name: collection
           in: query
           description: |
@@ -429,14 +404,156 @@ paths:
       summary: List Collections
       description: Fetch the names of the collections in the cluster.
       operationId: listCollection
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=RENAME:
+    get:
+      tags:
+        - collection
+      summary: Rename Collections
+      description: |
+        Renaming a collection sets up a standard alias that points to the underlying collection, so that the same (unmodified) collection can now be referred to in query, index and admin operations using the new name.
+
+        This command does NOT actually rename the underlying Solr collection - it sets up a new one-to-one alias using the new name, or renames the existing alias so that it uses the new name, while still referring to the same underlying Solr collection. However, from the user’s point of view the collection can now be accessed using the new name, and the new name can be also referred to in other aliases.
+        
+        The following limitations apply:
+        
+        the existing name must be either a SolrCloud collection or a standard alias referring to a single collection. Aliases that refer to more than 1 collection are not supported.
+        
+        the existing name must not be a Routed Alias.
+        
+        the target name must not be an existing alias.
+      operationId: renameCollection
       parameters:
-        - name: Authorization
-          in: header
-          description: Your authentication token
+        - name: name
+          in: query
+          description: |
+            Name of the existing SolrCloud collection or an alias that refers to exactly one collection and is not a Routed Alias.
           required: true
           schema:
             type: string
-            default: input your token
+        - name: target
+          in: query
+          description: |
+            Target name of the collection. This will be the new alias that refers to the underlying SolrCloud collection. The original name (or alias) of the collection will be replaced also in the existing aliases so that they also refer to the new name. Target name must not be an existing alias.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=DELETE:
+    get:
+      tags:
+        - collection
+      summary: Delete Collections
+      description: |
+        Delete collection base on collection's name
+      operationId: deleteCollection
+      parameters:
+        - name: name
+          in: query
+          description: |
+            The name of the collection to delete. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: target
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/{collection}/select:
+    get:
+      tags:
+        - query
+      summary: Query document
+      description: |
+        Query document in a document
+      operationId: query document
+      parameters:
+        - name: collection
+          in: path
+          description: |
+            The name of the collection to query.
+          required: true
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: |
+            The query string used to search the index. It can contain one or more query clauses, each of which consists of a field name, an operator, and a value. For example, the query string title:Solr AND author:"John Doe" would search for documents that have "Solr" in the title field and "John Doe" in the author field.
+          required: true
+          schema:
+            type: string
+        - name: fq
+          in: query
+          description: |
+            The filter query used to further refine the search. For example, the filter query price:[10 TO 100] would limit the search to documents where the price field is between 10 and 100.
+          required: false
+          schema:
+            type: string
+        - name: sort 
+          in: query
+          description: |
+            The field to sort the results on, and the order of the sort. For example, the sort parameter price asc would sort the results by the price field in ascending order.
+          required: false
+          schema:
+            type: string
+        - name: start 
+          in: query
+          description: |
+            The starting index for the result set. For example, to retrieve the first 10 documents that match the query, you would use start=0 and rows=10.
+          required: true
+          schema:
+            type: number
+            default: 1
+        - name: rows
+          in: query
+          description: |
+            The number of rows to return in the result set.
+          required: true
+          schema:
+            type: number
+            default: 10
+        - name: fl
+          in: query
+          description: |
+            The fields to include in the response. For example, the fl=title,author,price parameter would include only the title, author, and price fields in the response.
+          required: false
+          schema:
+            type: string
+        - name: wt
+          in: query
+          description: |
+            The response format. Solr supports several response formats, including JSON, XML, and CSV.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation
