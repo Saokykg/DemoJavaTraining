@@ -1,0 +1,437 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    Solr is an open-source search platform that allows you to easily create and manage search applications. It is built on top of Apache Lucene, a powerful and high-performance Java search engine library.
+
+    Solr 8.11 provides a RESTful API that allows developers to interact with Solr using standard HTTP requests. One way to interact with the Solr API is through Swagger UI, a graphical interface that allows you to explore and test the Solr API.
+    
+    The Solr 8.11 Swagger API provides documentation for the Solr REST API, allowing developers to easily understand and use the API. The API is organized by resource and method, and each resource and method is described with detailed documentation, including input parameters, output formats, and examples.
+    
+    With the Solr 8.11 Swagger API, developers can quickly build powerful search applications that can search, index, and analyze large amounts of data with ease. The API also provides advanced features such as faceting, highlighting, and spatial search, making it a powerful tool for building search applications.
+    
+  version: 1.0.11
+  
+servers:
+  - url: https://replace_host_url
+tags:
+  - name: collection
+    description: A collection is a single logical index that uses a single Solr configuration file and a single index schema.
+    externalDocs:
+      description: Find out more
+      url: https://solr.apache.org/guide/solr/latest/deployment-guide/cluster-node-management.html
+  - name: pet
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: store
+    description: Access to Petstore orders
+    externalDocs:
+      description: Find out more about our store
+      url: http://swagger.io
+  - name: user
+    description: Operations about user
+paths:
+  /admin/collections?action=CREATE:
+    get:
+      tags:
+        - collection
+      summary: Create collection
+      description: The CREATE action is used to create new collection of data.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Your authentication token
+          required: true
+          schema:
+            type: string
+            default: input your token
+        - name: name
+          in: query
+          description: The name of the collection to be created.
+          required: true
+          explode: true
+          schema:
+            type: string
+        - name: router.name
+          in: query
+          description: |
+            The router name that will be used. The router defines how documents will be distributed among the shards. Possible values are implicit or compositeId.
+
+            The implicit router does not automatically route documents to different shards. Whichever shard you indicate on the indexing request (or within each document) will be used as the destination for those documents.
+            
+            The compositeId router hashes the value in the uniqueKey field and looks up that hash in the collection’s clusterstate to determine which shard will receive the document, with the additional ability to manually direct the routing.
+            
+            When using the implicit router, the shards parameter is required. When using the compositeId router, the numShards parameter is required.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: numShards
+          in: query
+          description: |
+            The number of shards to be created as part of the collection. This is a required parameter when the router.name is compositeId.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: shards
+          in: query
+          description: |
+            A comma separated list of shard names, e.g., shard-x,shard-y,shard-z. This is a required parameter when the router.name is implicit.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: replicationFactor
+          in: query
+          description: |
+            The number of replicas to be created for each shard.
+
+            This will create a NRT type of replica. If you want another type of replica, see the tlogReplicas and pullReplicas parameters below. See the section Types of Replicas for more information about replica types.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: nrtReplicas
+          in: query
+          description: |
+            The number of NRT (Near-Real-Time) replicas to create for this collection. This type of replica maintains a transaction log and updates its index locally. If you want all of your replicas to be of this type, you can simply use replicationFactor instead.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: tlogReplicas
+          in: query
+          description: |
+            The number of PULL replicas to create for this collection. This type of replica does not maintain a transaction log and only updates its index via replication from a leader. This type is not eligible to become a leader and should not be the only type of replicas in the collection. See the section Types of Replicas for more information about replica types.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: pullReplicas
+          in: query
+          description: |
+            The number of PULL replicas to create for this collection. This type of replica does not maintain a transaction log and only updates its index via replication from a leader. This type is not eligible to become a leader and should not be the only type of replicas in the collection.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: maxShardsPerNode
+          in: query
+          description: |
+            When creating collections, the shards and/or replicas are spread across all available (i.e., live) nodes, and two replicas of the same shard will never be on the same node.
+
+            If a node is not live when the CREATE action is called, it will not get any parts of the new collection, which could lead to too many replicas being created on a single live node. Defining maxShardsPerNode sets a limit on the number of replicas the CREATE action will spread to each node.
+            
+            If the entire collection can not be fit into the live nodes, no collection will be created at all. The default maxShardsPerNode value is 1. A value of -1 means unlimited. If a policy is also specified then the stricter of maxShardsPerNode and policy rules apply.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createNodeSet
+          in: query
+          description: |
+            Allows defining the nodes to spread the new collection across. The format is a comma-separated list of node_names, such as localhost:8983_solr,localhost:8984_solr,localhost:8985_solr.
+
+            If not provided, the CREATE operation will create shard-replicas spread across all live Solr nodes.
+            
+            Alternatively, use the special value of EMPTY to initially create no shard-replica within the new collection and then later use the ADDREPLICA operation to add shard-replicas when and where required.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: createNodeSet.shuffle
+          in: query
+          description: |
+            Controls whether or not the shard-replicas created for this collection will be assigned to the nodes specified by the createNodeSet in a sequential manner, or if the list of nodes should be shuffled prior to creating individual replicas.
+
+            A false value makes the results of a collection creation predictable and gives more exact control over the location of the individual shard-replicas, but true can be a better choice for ensuring replicas are distributed evenly across nodes. The default is true.
+            
+            This parameter is ignored if createNodeSet is not also specified.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: collection.configName
+          in: query
+          description: |
+            Defines the name of the configuration (which must already be stored in ZooKeeper) to use for this collection.
+
+            If not provided, Solr will use the configuration of _default configset to create a new (and mutable) configset named <collectionName>.AUTOCREATED and will use it for the new collection. When such a collection is deleted, its autocreated configset will be deleted by default when it is not in use by any other collection.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: router.field
+          in: query
+          description: |
+            If this parameter is specified, the router will look at the value of the field in an input document to compute the hash and identify a shard instead of looking at the uniqueKey field. If the field specified is null in the document, the document will be rejected.
+
+            Please note that RealTime Get or retrieval by document ID would also require the parameter _route_ (or shard.keys) to avoid a distributed search.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: perReplicaState
+          in: query
+          description: |
+            If true the states of individual replicas will be maintained as individual child of the state.json. The default is false.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: property.name=value
+          in: query
+          description: |
+            Set core property name to value. See the section Defining core.properties for details on supported properties and values.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: autoAddReplicas
+          in: query
+          description: |
+            When set to true, enables automatic addition of replicas when the number of active replicas falls below the value set for replicationFactor. This may occur if a replica goes down, for example. The default is false, which means new replicas will not be added.
+
+            While this parameter is provided as part of Solr’s set of features to provide autoscaling of clusters, it is available even when you have not implemented any other part of autoscaling (such as a policy).
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: rule
+          in: query
+          description: |
+            Replica placement rules. See the section Rule-based Replica Placement for details.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: snitch
+          in: query
+          description: |
+            Details of the snitch provider. See the section Rule-based Replica Placement for details.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: |
+            Name of the collection-level policy.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: waitForFinalState
+          in: query
+          description: |
+            If true, the request will complete only when all affected replicas become active. The default is false, which means that the API will return the status of the single action, which may be before the new replica is online and active.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: withCollection
+          in: query
+          description: |
+            The name of the collection with which all replicas of this collection must be co-located. The collection must already exist and must have a single shard named shard1. 
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: |
+            Starting with version 8.1 when a collection is created additionally an alias can be created that points to this collection. This parameter allows specifying the name of this alias, effectively combining this operation with CREATEALIAS.
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid status value
+  /admin/collections?action=RELOAD:
+    get:
+      tags:
+        - collection
+      summary: Reload collection
+      description: The RELOAD action is used when you have changed a configuration in ZooKeeper.
+      operationId: reloadCollection
+      parameters:
+        - name: Authorization
+          in: header
+          description: Your authentication token
+          required: true
+          schema:
+            type: string
+            default: input your token
+        - name: name
+          in: query
+          description: The name of the collection to reload. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: Request ID to track this action which will be processed asynchronously.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=MODIFYCOLLECTION:
+    get:
+      tags:
+        - collection
+      summary: Modify collection
+      description: |
+        It’s possible to edit multiple attributes at a time. Changing these values only updates the z-node on ZooKeeper, they do not change the topology of the collection. For instance, increasing replicationFactor will not automatically add more replicas to the collection but will allow more ADDREPLICA commands to succeed.
+
+        An attribute can be deleted by passing an empty value. For example, yet_another_attribute_name= (with no value) will delete the yet_another_attribute_name parameter from the collection.
+      operationId: modifyCollection
+      parameters:
+        - name: Authorization
+          in: header
+          description: Your authentication token
+          required: true
+          schema:
+            type: string
+            default: input your token
+        - name: collection
+          in: query
+          description: |
+            The name of the collection to be modified. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: maxShardsPerNode
+          in: query
+          description: |
+            When creating collections, the shards and/or replicas are spread across all available (i.e., live) nodes, and two replicas of the same shard will never be on the same node.
+
+            If a node is not live when the CREATE action is called, it will not get any parts of the new collection, which could lead to too many replicas being created on a single live node. Defining maxShardsPerNode sets a limit on the number of replicas the CREATE action will spread to each node.
+            
+            If the entire collection can not be fit into the live nodes, no collection will be created at all. The default maxShardsPerNode value is 1. A value of -1 means unlimited. If a policy is also specified then the stricter of maxShardsPerNode and policy rules apply.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: replicationFactor
+          in: query
+          description: |
+            The number of replicas to be created for each shard.
+
+            This will create a NRT type of replica. If you want another type of replica, see the tlogReplicas and pullReplicas parameters below. See the section Types of Replicas for more information about replica types.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: autoAddReplicas
+          in: query
+          description: |
+            When set to true, enables automatic addition of replicas when the number of active replicas falls below the value set for replicationFactor. This may occur if a replica goes down, for example. The default is false, which means new replicas will not be added.
+
+            While this parameter is provided as part of Solr’s set of features to provide autoscaling of clusters, it is available even when you have not implemented any other part of autoscaling (such as a policy).
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: collection.configName
+          in: query
+          description: |
+            Defines the name of the configuration (which must already be stored in ZooKeeper) to use for this collection.
+
+            If not provided, Solr will use the configuration of _default configset to create a new (and mutable) configset named <collectionName>.AUTOCREATED and will use it for the new collection. When such a collection is deleted, its autocreated configset will be deleted by default when it is not in use by any other collection.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: rule
+          in: query
+          description: |
+            Replica placement rules. See the section Rule-based Replica Placement for details.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: snitch
+          in: query
+          description: |
+            Details of the snitch provider. See the section Rule-based Replica Placement for details.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: |
+            Name of the collection-level policy.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: readOnly
+          in: query
+          required: false
+          explode: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=LIST:
+    get:
+      tags:
+        - collection
+      summary: List Collections
+      description: Fetch the names of the collections in the cluster.
+      operationId: listCollection
+      parameters:
+        - name: Authorization
+          in: header
+          description: Your authentication token
+          required: true
+          schema:
+            type: string
+            default: input your token
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
