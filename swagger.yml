@@ -32,6 +32,17 @@ tags:
       url: http://swagger.io
   - name: user
     description: Operations about user
+    
+components:
+  securitySchemes:
+    auth:
+      type: apiKey
+      in: header
+      name: Authorization
+
+security:
+  - auth: []
+  
 paths:
   /admin/collections?action=CREATE:
     get:
