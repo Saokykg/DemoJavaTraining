@@ -29,27 +29,14 @@ info:
 servers:
   - url: https://replace_host_url
 tags:
-  - name: collection
+  - name: Cluster and Node Management
     description: >-
-      A collection is a single logical index that uses a single Solr
-      configuration file and a single index schema.
+      A cluster is a set of Solr nodes operating in coordination with each other.
+
+      These API commands work with a SolrCloud cluster at the entire cluster level, or on individual nodes.
     externalDocs:
       description: Find out more
       url: https://solr.apache.org/guide/8_11/cluster-node-management.html
-  - name: query
-    description: >
-      Solr supports several query parsers, offering search application designers
-      great flexibility in controlling how queries are parsed.
-
-
-      This section explains how to specify the query parser to be used. It also
-      describes the syntax and features supported by the main query parsers
-      included with Solr and describes some other parsers that may be useful for
-      particular situations. There are some query parameters common to all Solr
-      parsers.
-    externalDocs:
-      description: Find out more
-      url: https://solr.apache.org/guide/8_11/common-query-parameters.html
 components:
   securitySchemes:
     auth:
@@ -59,321 +46,48 @@ components:
 security:
   - auth: []
 paths:
-  /admin/collections?action=COLLECTIONPROP:
+  /admin/collections?action=CLUSTERSTATUS:
     get:
       tags:
-        - collection
-      summary: Collection props
+        - Cluster and Node Management
+      summary: Cluster Status
       description: |
-        Add, edit or delete a collection property.
-      operationId: collectionProps
-      parameters:
-        - name: name
-          in: query
-          description: |
-            The name of the collection for which the property would be set.
-          required: true
-          schema:
-            type: string
-        - name: propertyName
-          in: query
-          description: |
-            The name of the property.
-          required: false
-          schema:
-            type: string
-        - name: propertyValue
-          in: query
-          description: >
-            The value of the property. When not provided, the property is
-            deleted.
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
-  /admin/collections?action=MIGRATE:
-    get:
-      tags:
-        - collection
-      summary: Migrate Collections
-      description: >
-        The MIGRATE command is used to migrate all documents having a given
-        routing key to another collection. The source collection will continue
-        to have the same data as-is but it will start re-routing write requests
-        to the target collection for the number of seconds specified by the
-        forward.timeout parameter. It is the responsibility of the user to
-        switch to the target collection for reads and writes after the MIGRATE
-        action completes.
+        Fetch the cluster status including collections, shards, replicas, configuration name as well as collection aliases and cluster properties.
+        
+        Additionally, this command reports a health status of each collection and shard, in order to make it easier to monitor the operational state of the collections. The following health state values are defined, ordered from the best to worst, based on the percentage of active replicas (active):
 
-
-        The routing key specified by the split.key parameter may span multiple
-        shards on both the source and the target collections. The migration is
-        performed shard-by-shard in a single thread. One or more temporary
-        collections may be created by this command during the ‘migrate’ process
-        but they are cleaned up at the end automatically.
-
-
-        This is a long running operation and therefore using the async parameter
-        is highly recommended. If the async parameter is not specified then the
-        operation is synchronous by default and keeping a large read timeout on
-        the invocation is advised. Even with a large read timeout, the request
-        may still timeout but that doesn’t necessarily mean that the operation
-        has failed. Users should check logs, cluster state, source and target
-        collections before invoking the operation again.
-
-
-        This command works only with collections using the compositeId router.
-        The target collection must not receive any writes during the time the
-        MIGRATE command is running otherwise some writes may be lost.
-
-
-        Please note that the MIGRATE API does not perform any de-duplication on
-        the documents so if the target collection contains documents with the
-        same uniqueKey as the documents being migrated then the target
-        collection will end up with duplicate documents.
-      operationId: migrateCollection
-      parameters:
-        - name: collection
-          in: query
-          description: >
-            The name of the source collection from which documents will be
-            split. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: target.collection
-          in: query
-          description: >
-            The name of the target collection to which documents will be
-            migrated. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: split.key
-          in: query
-          description: >
-            The routing key prefix. For example, if the uniqueKey of a document
-            is "a!123", then you would use split.key=a!. This parameter is
-            required.
-          required: true
-          schema:
-            type: string
-        - name: forward.timeout
-          in: query
-          description: >
-            The timeout, in seconds, until which write requests made to the
-            source collection for the given split.key will be forwarded to the
-            target shard. The default is 60 seconds.
-          required: false
-          schema:
-            type: string
-        - name: property.name=value
-          in: query
-          description: |
-            Set core property name to value
-          required: false
-          schema:
-            type: string
-        - name: async
-          in: query
-          description: >
-            Request ID to track this action which will be processed
-            asynchronously.
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
-  /admin/collections?action=REINDEXCOLLECTION:
-    get:
-      tags:
-        - collection
-      summary: Reindex collection
-      description: >
-        The REINDEXCOLLECTION command reindexes a collection using existing data
-        from the source collection.
-
-
-        The target collection must not exist (and may not be an alias). If the
-        target collection name is the same as the source collection then first a
-        unique sequential name will be generated for the target collection, and
-        then after reindexing is done an alias will be created that points from
-        the source name to the actual sequentially-named target collection.
-
-
-        When reindexing is started the source collection is put in read-only
-        mode to ensure that all source documents are properly processed.
-
-
-        Using optional parameters a different index schema, collection shape
-        (number of shards and replicas) or routing parameters can be requested
-        for the target collection.
-
-
-        Reindexing is executed as a streaming expression daemon, which runs on
-        one of the source collection’s replicas. It is usually a time-consuming
-        operation so it’s recommended to execute it as an asynchronous request
-        in order to avoid request time outs. Only one reindexing operation may
-        execute concurrently for a given source collection. Long-running,
-        erroneous or crashed reindexing operations may be terminated by using
-        the abort option, which also removes partial results.
-      operationId: reindexCollection
-      parameters:
-        - name: name
-          in: query
-          description: |
-            Source collection name, may be an alias. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: cmd
-          in: query
-          description: >
-            Optional command. Default command is start. Currently supported
-            commands are:
-
-            start - default, starts processing if not already running,
-
-
-            abort - aborts an already running reindexing (or clears a left-over
-            status after a crash), and deletes partial results,
-
-
-            status - returns detailed status of a running reindexing command.
-          required: false
-          schema:
-            type: string
-        - name: target
-          in: query
-          description: >
-            Target collection name, optional. If not specified a unique name
-            will be generated and after all documents have been copied an alias
-            will be created that points from the source collection name to the
-            unique sequentially-named collection, effectively "hiding" the
-            original source collection from regular update and search
-            operations.
-          required: false
-          schema:
-            type: string
-        - name: q
-          in: query
-          description: >
-            Optional query to select documents for reindexing. Default value is
-            *:*.
-          required: false
-          schema:
-            type: string
-        - name: fl
-          in: query
-          description: |
-            Optional list of fields to reindex. Default value is *.
-          required: false
-          schema:
-            type: string
-        - name: rows
-          in: query
-          description: >
-            Documents are transferred in batches. Depending on the average size
-            of the document large batch sizes may cause memory issues. Default
-            value is 100.
-          required: false
-          schema:
-            type: string
-        - name: collection.configName
-          in: query
-          description: >
-            Optional name of the configset for the target collection. Default is
-            the same as the source collection.
-          required: false
-          schema:
-            type: string
-        - name: removeSource
-          in: query
-          description: >
-            Optional boolean. If true then after the processing is successfully
-            finished the source collection will be deleted.
-          required: false
-          schema:
-            type: string
-        - name: async
-          in: query
-          description: >
-            Optional request ID to track this action which will be processed
-            asynchronously.
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
-  /admin/collections?action=COLSTATUS:
-    get:
-      tags:
-        - collection
-      summary: Detailed Status of a Collection’s Indexes
-      description: |
-        The COLSTATUS command provides a detailed description of the collection status, including low-level index information about segments and field data.
-
-        This command also checks the compliance of Lucene index field types with the current Solr collection schema and indicates the names of non-compliant fields, i.e., Lucene fields with field types incompatible (or different) from the corresponding Solr field types declared in the current schema. Such incompatibilities may result from incompatible schema changes or after migration of data to a different major Solr release.
-      operationId: colStatus
+        GREEN active == 100%, all replicas are active and there’s a shard leader.
+        
+        YELLOW 100% > active > 50%, AND there’s a shard leader.
+        
+        ORANGE 50% >= active > 0%, AND there’s a shard leader.
+        
+        RED No active replicas OR there’s no shard leader.
+        
+        The collection health state is reported as the worst state of any shard, e.g., for a collection with all shards GREEN except for one YELLOW the collection health will be reported as YELLOW.
+      operationId: clusterStatus
       parameters:
         - name: collection
           in: query
           description: |
-            Collection name (optional). If missing then it means all collections.
+            The collection or alias name for which information is requested. If omitted, information on all collections in the cluster will be returned. If an alias is supplied, information on the collections in the alias will be returned.
           required: true
           schema:
             type: string
-        - name: coreInfo
-          in: query
-          description: >
-            Optional boolean. If true then additional information will be provided about SolrCore of shard leaders.
-          required: false
-          schema:
-            type: boolean
-        - name: segments
-          in: query
-          description: >
-            Optional boolean. If true then segment information will be provided.e collection from regular update and search
-            operations.
-          required: false
-          schema:
-            type: boolean
-        - name: fieldInfo
-          in: query
-          description: >
-            Optional boolean. If true then detailed Lucene field information will be provided and their corresponding Solr schema types.
-          required: false
-          schema:
-            type: boolean
-        - name: sizeInfo
+        - name: shard
           in: query
           description: |
-            Optional boolean. If true then additional information about the index files size and their RAM usage will be provided.
+            The shard(s) for which information is requested. Multiple shard names can be specified as a comma-separated list.
           required: false
           schema:
-            type: boolean
+            type: string
+        - name: _route_
+          in: query
+          description: >
+            This can be used if you need the details of the shard where a particular document belongs to and you don’t know which shard it falls under.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation
@@ -383,69 +97,74 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=BACKUP:
+  /admin/collections?action=CLUSTERPROP:
     get:
       tags:
-        - collection
-      summary: Backup Collection
+        - Cluster and Node Management
+      summary: Cluster Properties
       description: |
-        Backs up Solr collections and associated configurations to a shared filesystem - for example a Network File System.
-        The BACKUP command will backup Solr indexes and configurations for a specified collection. The BACKUP command takes one copy from each shard for the indexes. For configurations, it backs up the configset that was associated with the collection and metadata.
-
-        Backup data is stored in the repository based on the provided name and location. Each backup location can hold multiple backups for the same collection, allowing users to later restore from any of these "backup points" as desired. Within a location backups are done incrementally, so that index files uploaded previously are skipped and not duplicated in the backup repository.
-      operationId: backupCollection
+        Add, edit or delete a cluster-wide property.
+      operationId: clusterProperties
       parameters:
-        - name: collection
-          in: query
-          description: |
-            The name of the collection to be backed up. This parameter is required.
-          required: true
-          schema:
-            type: string
         - name: name
           in: query
-          description: >
-            What to name the backup that is created. This is checked to make sure it doesn’t already exist, and otherwise an error message is raised. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: location
-          in: query
-          description: >
-            The location on a shared drive for the backup command to write to. This parameter is required, unless a default location is defined on the repository configuration, or set as a cluster property.
+          description: |
+            The name of the property. Supported properties names are autoAddReplicas, legacyCloud, location, maxCoresPerNode, urlScheme, and defaultShardPreferences. If the Jaeger tracing contrib has been enabled, the property samplePercentage is also available.
             
-            If the location path is on a mounted drive, the mount must be available on the node that serves as the overseer, even if the overseer node does not host a replica of the collection being backed up. Since any node can take the overseer role at any time, a best practice to avoid possible backup failures is to ensure the mount point is available on all nodes of the cluster.
-            
-            Each backup location can only hold a backup for one collection, however the same location can be used for repeated backups of the same collection. Repeated backups of the same collection are done incrementally, so that files unchanged since the last backup are not duplicated in the backup repository.
-            operations.
+            Other properties can be set (for example, if you need them for custom plugins) but they must begin with the prefix ext.. Unknown properties that don’t begin with ext. will be rejected.
+          required: true
+          schema:
+            type: string
+        - name: val
+          in: query
+          description: |
+            The value of the property. If the value is empty or null, the property is unset.
           required: false
           schema:
             type: string
-        - name: async
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=BALANCESHARDUNIQUE:
+    get:
+      tags:
+        - Cluster and Node Management
+      summary: Balance a Property Across Nodes
+      description: |
+        Insures that a particular property is distributed evenly amongst the physical nodes that make up a collection. If the property already exists on a replica, every effort is made to leave it there. If the property is not on any replica on a shard, one is chosen and the property is added.
+      operationId: balanceShardUnique
+      parameters:
+        - name: collection
           in: query
           description: |
-            Request ID to track this action which will be processed asynchronously.
-          required: false
+            The name of the collection to balance the property in. This parameter is required.
+          required: true
           schema:
             type: string
-        - name: repository
+        - name: property
           in: query
           description: |
-            The name of a repository to be used for the backup. If no repository is specified then the local filesystem repository will be used automatically.
-          required: false
+            The property to balance. The literal property. is prepended to this property if not specified explicitly. This parameter is required.
+          required: true
           schema:
             type: string
-        - name: maxNumBackupPoints
+        - name: onlyactivenodes
           in: query
           description: |
-            The upper-bound on how many backups should be retained at the backup location. If the current number exceeds this bound, older backups will be deleted until only maxNumBackupPoints backups remain. This parameter has no effect if incremental=false is specified.
+            Defaults to true. Normally, the property is instantiated on active nodes only. If this parameter is specified as false, then inactive nodes are also included for distribution.
           required: false
           schema:
-            type: string
-        - name: incremental
+            type: boolean
+        - name: shardUnique
           in: query
           description: |
-            A boolean parameter allowing users to choose whether to create an incremental (incremental=true) or a "snapshot" (incremental=false) backup. If unspecified, backups are done incrementally by default. Incremental backups are preferred in all known circumstances and snapshot backups are deprecated, so this parameter should only be used after much consideration.
+            Something of a safety valve. There is one pre-defined property (preferredLeader) that defaults this value to true. For all other properties that are balanced, this must be set to true or an error message will be returned.
           required: false
           schema:
             type: boolean
@@ -458,45 +177,22 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=LISTBACKUP:
+  /admin/collections?action=UTILIZENODE:
     get:
       tags:
-        - collection
-      summary: List Backups
+        - Cluster and Node Management
+      summary: Utilize a New Node
       description: |
-        Lists information about each backup stored at the specified repository location. Basic metadata is returned about each backup including: the timestamp the backup was created, the Lucene version used to create the index, and the size of the backup both in number of files and total filesize.
-        
-        The file structure used by Solr internally to represent backups changed in 8.9.0. While backups created prior to this format change can still be restored, the LISTBACKUP and DELETEBACKUP API commands are only valid on this newer format. Attempting to use them on a location holding an older backup will result in an error message.
-      operationId: listBackup
-      parameters:
-        - name: name
-          in: query
-          description: |
-            The name of the backups to list. The backup name usually corresponds to the collection-name, but isn’t required to. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: location
-          in: query
-          description: |
-            The repository location to list backups from. This parameter is required, unless a default location is defined on the repository configuration, or set as a cluster property.
+        This command can be used to move some replicas from the existing nodes to either a new node or a less loaded node to reduce the load on the existing node.
 
-            If the location path is on a mounted drive, the mount must be available on the node that serves as the overseer, even if the overseer node does not host a replica of the collection being backed up. Since any node can take the overseer role at any time, a best practice to avoid possible backup failures is to ensure the mount point is available on all nodes of the cluster.
-          required: false
-          schema:
-            type: string
-        - name: repository
+        This uses your autoscaling policies and preferences to identify which replica needs to be moved. It tries to fix any policy violations first and then it tries to move some load off of the most loaded nodes according to the preferences.
+      operationId: balanceShardUnique
+      parameters:
+        - name: node
           in: query
           description: |
-            The name of a repository to be used for accessing backup information. If no repository is specified then the local filesystem repository will be used automatically.
-          required: false
-          schema:
-            type: string
-        - name: location
-          in: query
-          description: |
-            Request ID to track this action which will be processed asynchronously.
-          required: false
+            The name of the node that needs to be utilized. This parameter is required.
+          required: true
           schema:
             type: string
       responses:
@@ -508,42 +204,40 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=RESTORE:
+  /admin/collections?action=REPLACENODE:
     get:
       tags:
-        - collection
-      summary: Restore collection
+        - Cluster and Node Management
+      summary: Move All Replicas in a Node to Another
       description: |
-        The RESTORE operation will replace the content of a collection with files from the specified backup.
+        This command recreates replicas in one node (the source) to another node(s) (the target). After each replica is copied, the replicas in the source node are deleted.
 
-        If the provided collection value matches an existing collection, Solr will use it for restoration, assuming it is compatible (same number of shards, etc.) with the stored backup files. If the provided collection value doesn’t exist, a new collection with that name is created in a way compatible with the stored backup files. The collection created will be have the same number of shards and replicas as the original collection, preserving routing information, etc. Optionally, you can override some parameters documented below.
+        For source replicas that are also shard leaders the operation will wait for the number of seconds set with the timeout parameter to make sure there’s an active replica that can become a leader (either an existing replica becoming a leader or the new replica completing recovery and becoming a leader).
         
-        While restoring, if a configset with the same name exists in ZooKeeper then Solr will reuse that, or else it will upload the backed up configset in ZooKeeper and use that.
-        
-        You can use the collection CREATEALIAS command to make sure clients don’t need to change the endpoint to query or index against the newly restored collection.
-      operationId: restoreCollection
+        The API uses the Autoscaling framework to find nodes that can satisfy the disk requirements for the new replicas but only when an Autoscaling policy is configured.
+      operationId: replaceNode
       parameters:
-        - name: collection
+        - name: sourceNode
           in: query
           description: |
-            The collection where the indexes will be restored into. This parameter is required
+            The source node from which the replicas need to be copied from. This parameter is required.
           required: true
           schema:
             type: string
-        - name: name
+        - name: targetNode
           in: query
           description: |
-            The name of the existing backup that you want to restore. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: location
-          in: query
-          description: |
-            The location on a shared drive for the RESTORE command to read from. Alternately it can be set as a cluster property.
+            The target node where replicas will be copied. If this parameter is not provided, Solr will identify nodes automatically based on policies or number of cores in each node.
           required: false
           schema:
             type: string
+        - name: parallel
+          in: query
+          description: |
+            If this flag is set to true, all replicas are created in separate threads. Keep in mind that this can lead to very high network and disk I/O if the replicas have very large indices. The default is false.
+          required: false
+          schema:
+            type: boolean
         - name: async
           in: query
           description: |
@@ -551,20 +245,11 @@ paths:
           required: false
           schema:
             type: string
-        - name: repository
+        - name: timeout
           in: query
           description: |
-            The name of a repository to be used for the backup. If no repository is specified then the local filesystem repository will be used automatically.
-          required: false
-          schema:
-            type: string
-        - name: backupId
-          in: query
-          description: |
-            The ID of a specific backup point to restore from.
-
-            Backup locations can hold multiple backups of the same collection. This parameter allows users to choose which of those backups should be used to restore from. If not specified the most recent backup point is used.
-          required: false
+            Time in seconds to wait until new replicas are created, and until leader replicas are fully recovered. The default is 300, or 5 minutes.
+          required: true
           schema:
             type: string
       responses:
@@ -576,57 +261,20 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=DELETEBACKUP:
+  /admin/collections?action=DELETENODE:
     get:
       tags:
-        - collection
-      summary: Delete backup files from the remote repository
+        - Cluster and Node Management
+      summary: Delete Replicas in a Node Another
       description: |
-        Solr allows storing multiple backups for the same collection at any given logical "location". These backup points are each given an identifier (backupId) which can be used to delete them specifically with this API. Alternatively Solr can be told to keep the last maxNumBackupPoints backups, deleting everything else at the given location. Deleting backup points in these ways can orphan index files that are no longer referenced by any backup points. These orphaned files can be detected and deleted using the purgeUnused option. See the parameter descriptions below for more information.
-      operationId: restoreCollection
+        Deletes all replicas of all collections in that node. Please note that the node itself will remain as a live node after this operation.
+      operationId: deleteNode
       parameters:
-        - name: name
+        - name: node
           in: query
           description: |
-            The backup name to delete backup files from. This parameter is required.
+            The node to be removed. This parameter is required.
           required: true
-          schema:
-            type: string
-        - name: location
-          in: query
-          description: |
-            The repository location to delete backups from. This parameter is required, unless a default location is defined on the repository configuration, or set as a cluster property.
-
-            If the location path is on a mounted drive, the mount must be available on the node that serves as the overseer, even if the overseer node does not host a replica of the collection being backed up. Since any node can take the overseer role at any time, a best practice to avoid possible backup failures is to ensure the mount point is available on all nodes of the cluster.
-          required: false
-          schema:
-            type: string
-        - name: repository
-          in: query
-          description: |
-            The name of a repository to be used for deleting backup files. If no repository is specified then the local filesystem repository will be used automatically.
-          required: false
-          schema:
-            type: string
-        - name: backupId
-          in: query
-          description: |
-            Explicitly specify a single backup-ID to delete. Only one of backupId, maxNumBackupPoints, and purgeUnused may be specified per DELETEBACKUP request.
-          required: false
-          schema:
-            type: string
-        - name: maxNumBackupPoints
-          in: query
-          description: |
-            Specify how many backups should be retained, deleting all others. Only one of backupId, maxNumBackupPoints, and purgeUnused may be specified per DELETEBACKUP request.
-          required: false
-          schema:
-            type: string
-        - name: purgeUnused
-          in: query
-          description: |
-            Solr’s incremental backup support can orphan files if the backups referencing them are deleted. The purgeUnused flag parameter triggers a scan to detect these orphaned files and delete them. Administrators doing repeated backups at the same location should plan on using this parameter sporadically to reclaim disk space. Only one of backupId, maxNumBackupPoints, and purgeUnused may be specified per DELETEBACKUP request.
-          required: false
           schema:
             type: string
         - name: async
@@ -645,39 +293,109 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=REBALANCELEADERS:
+  /admin/collections?action=ADDROLE:
     get:
       tags:
-        - collection
-      summary: Rebalance Leaders
+        - Cluster and Node Management
+      summary: Add a Role
       description: |
-        Reassigns leaders in a collection according to the preferredLeader property across active nodes.
-        
-        Leaders are assigned in a collection according to the preferredLeader property on active nodes. This command should be run after the preferredLeader property has been assigned via the BALANCESHARDUNIQUE or ADDREPLICAPROP commands.
-      operationId: rebalanceLeaders
+       Assigns a role to a given node in the cluster. The only supported role is overseer.
+
+        Use this command to dedicate a particular node as Overseer. Invoke it multiple times to add more nodes. This is useful in large clusters where an Overseer is likely to get overloaded. If available, one among the list of nodes which are assigned the 'overseer' role would become the overseer. The system would assign the role to any other node if none of the designated nodes are up and running.
+      operationId: addRole
+      parameters:
+        - name: role
+          in: query
+          description: |
+            The name of the role. The only supported role as of now is overseer. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: node
+          in: query
+          description: |
+            The name of the node that will be assigned the role. It is possible to assign a role even before that node is started. This parameter is started.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=REMOVEROLE:
+    get:
+      tags:
+        - Cluster and Node Management
+      summary: Remove Role
+      description: |
+       Remove an assigned role. This API is used to undo the roles assigned using ADDROLE operation
+      operationId: removeRole
+      parameters:
+        - name: role
+          in: query
+          description: |
+            The name of the role. The only supported role as of now is overseer. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: node
+          in: query
+          description: |
+            The name of the node where the role should be removed.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=OVERSEERSTATUS:
+    get:
+      tags:
+        - Cluster and Node Management
+      summary: Overseer Status and Statistics
+      description: |
+       Returns the current status of the overseer, performance statistics of various overseer APIs, and the last 10 failures per operation type.
+      operationId: overseerStatus
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=MIGRATESTATEFORMAT:
+    get:
+      tags:
+        - Cluster and Node Management
+      summary: Migrate Cluster State
+      description: |
+       A expert level utility API to move a collection from shared clusterstate.json ZooKeeper node (created with stateFormat=1, the default in all Solr releases prior to 5.0) to the per-collection state.json stored in ZooKeeper (created with stateFormat=2, the current default) seamlessly without any application down-time.
+      operationId: migrateStateFormat
       parameters:
         - name: collection
           in: query
           description: |
-            The name of the collection to rebalance preferredLeaders on. This parameter is required.
+            The name of the collection to be migrated from clusterstate.json to its own state.json ZooKeeper node. This parameter is required.
           required: true
           schema:
             type: string
-        - name: maxAtOnce
+        - name: async
           in: query
           description: |
-            The maximum number of reassignments to have queue up at once. Values <=0 are use the default value Integer.MAX_VALUE.
-
-            When this number is reached, the process waits for one or more leaders to be successfully assigned before adding more to the queue.
-          required: false
-          schema:
-            type: string
-        - name: maxWaitSeconds
-          in: query
-          description: |
-            Defaults to 60. This is the timeout value when waiting for leaders to be reassigned. If maxAtOnce is less than the number of reassignments that will take place, this is the maximum interval that any single wait for at least one reassignment.
-            
-            For example, if 10 reassignments are to take place and maxAtOnce is 1 and maxWaitSeconds is 60, the upper bound on the time that the command may wait is 10 minutes.
+            Request ID to track this action which will be processed asynchronously.
           required: false
           schema:
             type: string
