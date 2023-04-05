@@ -1,283 +1,92 @@
 openapi: 3.0.3
 info:
   title: Swagger Petstore - OpenAPI 3.0
-  description: |-
-    Solr is an open-source search platform that allows you to easily create and manage search applications. It is built on top of Apache Lucene, a powerful and high-performance Java search engine library.
+  description: >-
+    Solr is an open-source search platform that allows you to easily create and
+    manage search applications. It is built on top of Apache Lucene, a powerful
+    and high-performance Java search engine library.
 
-    Solr 8.11 provides a RESTful API that allows developers to interact with Solr using standard HTTP requests. One way to interact with the Solr API is through Swagger UI, a graphical interface that allows you to explore and test the Solr API.
-    
-    The Solr 8.11 Swagger API provides documentation for the Solr REST API, allowing developers to easily understand and use the API. The API is organized by resource and method, and each resource and method is described with detailed documentation, including input parameters, output formats, and examples.
-    
-    With the Solr 8.11 Swagger API, developers can quickly build powerful search applications that can search, index, and analyze large amounts of data with ease. The API also provides advanced features such as faceting, highlighting, and spatial search, making it a powerful tool for building search applications.
-    
+
+    Solr 8.11 provides a RESTful API that allows developers to interact with
+    Solr using standard HTTP requests. One way to interact with the Solr API is
+    through Swagger UI, a graphical interface that allows you to explore and
+    test the Solr API.
+
+
+    The Solr 8.11 Swagger API provides documentation for the Solr REST API,
+    allowing developers to easily understand and use the API. The API is
+    organized by resource and method, and each resource and method is described
+    with detailed documentation, including input parameters, output formats, and
+    examples.
+
+
+    With the Solr 8.11 Swagger API, developers can quickly build powerful search
+    applications that can search, index, and analyze large amounts of data with
+    ease. The API also provides advanced features such as faceting,
+    highlighting, and spatial search, making it a powerful tool for building
+    search applications.
   version: 1.0.11
-  
 servers:
   - url: https://replace_host_url
 tags:
   - name: collection
-    description: A collection is a single logical index that uses a single Solr configuration file and a single index schema.
+    description: >-
+      A collection is a single logical index that uses a single Solr
+      configuration file and a single index schema.
     externalDocs:
       description: Find out more
       url: https://solr.apache.org/guide/8_11/cluster-node-management.html
   - name: query
-    description: |
-      Solr supports several query parsers, offering search application designers great flexibility in controlling how queries are parsed.
+    description: >
+      Solr supports several query parsers, offering search application designers
+      great flexibility in controlling how queries are parsed.
 
-      This section explains how to specify the query parser to be used. It also describes the syntax and features supported by the main query parsers included with Solr and describes some other parsers that may be useful for particular situations. There are some query parameters common to all Solr parsers.
+
+      This section explains how to specify the query parser to be used. It also
+      describes the syntax and features supported by the main query parsers
+      included with Solr and describes some other parsers that may be useful for
+      particular situations. There are some query parameters common to all Solr
+      parsers.
     externalDocs:
       description: Find out more
       url: https://solr.apache.org/guide/8_11/common-query-parameters.html
-    
 components:
   securitySchemes:
     auth:
       type: apiKey
       in: header
       name: Authorization
-
 security:
   - auth: []
-  
 paths:
-  /admin/collections?action=CREATE:
+  /admin/collections?action=COLLECTIONPROP:
     get:
       tags:
         - collection
-      summary: Create collection
-      description: The CREATE action is used to create new collection of data.
+      summary: Collection props
+      description: |
+        Add, edit or delete a collection property.
+      operationId: collectionProps
       parameters:
         - name: name
           in: query
-          description: The name of the collection to be created.
-          required: true
-          explode: true
-          schema:
-            type: string
-        - name: router.name
-          in: query
           description: |
-            The router name that will be used. The router defines how documents will be distributed among the shards. Possible values are implicit or compositeId.
-
-            The implicit router does not automatically route documents to different shards. Whichever shard you indicate on the indexing request (or within each document) will be used as the destination for those documents.
-            
-            The compositeId router hashes the value in the uniqueKey field and looks up that hash in the collection’s clusterstate to determine which shard will receive the document, with the additional ability to manually direct the routing.
-            
-            When using the implicit router, the shards parameter is required. When using the compositeId router, the numShards parameter is required.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: numShards
-          in: query
-          description: |
-            The number of shards to be created as part of the collection. This is a required parameter when the router.name is compositeId.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: shards
-          in: query
-          description: |
-            A comma separated list of shard names, e.g., shard-x,shard-y,shard-z. This is a required parameter when the router.name is implicit.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: replicationFactor
-          in: query
-          description: |
-            The number of replicas to be created for each shard.
-
-            This will create a NRT type of replica. If you want another type of replica, see the tlogReplicas and pullReplicas parameters below. See the section Types of Replicas for more information about replica types.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: nrtReplicas
-          in: query
-          description: |
-            The number of NRT (Near-Real-Time) replicas to create for this collection. This type of replica maintains a transaction log and updates its index locally. If you want all of your replicas to be of this type, you can simply use replicationFactor instead.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: tlogReplicas
-          in: query
-          description: |
-            The number of PULL replicas to create for this collection. This type of replica does not maintain a transaction log and only updates its index via replication from a leader. This type is not eligible to become a leader and should not be the only type of replicas in the collection. See the section Types of Replicas for more information about replica types.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: pullReplicas
-          in: query
-          description: |
-            The number of PULL replicas to create for this collection. This type of replica does not maintain a transaction log and only updates its index via replication from a leader. This type is not eligible to become a leader and should not be the only type of replicas in the collection.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: maxShardsPerNode
-          in: query
-          description: |
-            When creating collections, the shards and/or replicas are spread across all available (i.e., live) nodes, and two replicas of the same shard will never be on the same node.
-
-            If a node is not live when the CREATE action is called, it will not get any parts of the new collection, which could lead to too many replicas being created on a single live node. Defining maxShardsPerNode sets a limit on the number of replicas the CREATE action will spread to each node.
-            
-            If the entire collection can not be fit into the live nodes, no collection will be created at all. The default maxShardsPerNode value is 1. A value of -1 means unlimited. If a policy is also specified then the stricter of maxShardsPerNode and policy rules apply.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: createNodeSet
-          in: query
-          description: |
-            Allows defining the nodes to spread the new collection across. The format is a comma-separated list of node_names, such as localhost:8983_solr,localhost:8984_solr,localhost:8985_solr.
-
-            If not provided, the CREATE operation will create shard-replicas spread across all live Solr nodes.
-            
-            Alternatively, use the special value of EMPTY to initially create no shard-replica within the new collection and then later use the ADDREPLICA operation to add shard-replicas when and where required.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: createNodeSet.shuffle
-          in: query
-          description: |
-            Controls whether or not the shard-replicas created for this collection will be assigned to the nodes specified by the createNodeSet in a sequential manner, or if the list of nodes should be shuffled prior to creating individual replicas.
-
-            A false value makes the results of a collection creation predictable and gives more exact control over the location of the individual shard-replicas, but true can be a better choice for ensuring replicas are distributed evenly across nodes. The default is true.
-            
-            This parameter is ignored if createNodeSet is not also specified.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: collection.configName
-          in: query
-          description: |
-            Defines the name of the configuration (which must already be stored in ZooKeeper) to use for this collection.
-
-            If not provided, Solr will use the configuration of _default configset to create a new (and mutable) configset named <collectionName>.AUTOCREATED and will use it for the new collection. When such a collection is deleted, its autocreated configset will be deleted by default when it is not in use by any other collection.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: router.field
-          in: query
-          description: |
-            If this parameter is specified, the router will look at the value of the field in an input document to compute the hash and identify a shard instead of looking at the uniqueKey field. If the field specified is null in the document, the document will be rejected.
-
-            Please note that RealTime Get or retrieval by document ID would also require the parameter _route_ (or shard.keys) to avoid a distributed search.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: perReplicaState
-          in: query
-          description: |
-            If true the states of individual replicas will be maintained as individual child of the state.json. The default is false.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: property.name=value
-          in: query
-          description: |
-            Set core property name to value. See the section Defining core.properties for details on supported properties and values.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: autoAddReplicas
-          in: query
-          description: |
-            When set to true, enables automatic addition of replicas when the number of active replicas falls below the value set for replicationFactor. This may occur if a replica goes down, for example. The default is false, which means new replicas will not be added.
-
-            While this parameter is provided as part of Solr’s set of features to provide autoscaling of clusters, it is available even when you have not implemented any other part of autoscaling (such as a policy).
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: async
-          in: query
-          description: |
-            Request ID to track this action which will be processed asynchronously.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: rule
-          in: query
-          description: |
-            Replica placement rules. See the section Rule-based Replica Placement for details.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: snitch
-          in: query
-          description: |
-            Details of the snitch provider. See the section Rule-based Replica Placement for details.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: policy
-          in: query
-          description: |
-            Name of the collection-level policy.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: waitForFinalState
-          in: query
-          description: |
-            If true, the request will complete only when all affected replicas become active. The default is false, which means that the API will return the status of the single action, which may be before the new replica is online and active.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: withCollection
-          in: query
-          description: |
-            The name of the collection with which all replicas of this collection must be co-located. The collection must already exist and must have a single shard named shard1. 
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: alias
-          in: query
-          description: |
-            Starting with version 8.1 when a collection is created additionally an alias can be created that points to this collection. This parameter allows specifying the name of this alias, effectively combining this operation with CREATEALIAS.
-          required: false
-          explode: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-        '400':
-          description: Invalid status value
-  /admin/collections?action=RELOAD:
-    get:
-      tags:
-        - collection
-      summary: Reload collection
-      description: The RELOAD action is used when you have changed a configuration in ZooKeeper.
-      operationId: reloadCollection
-      parameters:
-        - name: name
-          in: query
-          description: The name of the collection to reload. This parameter is required.
+            The name of the collection for which the property would be set.
           required: true
           schema:
             type: string
-        - name: async
+        - name: propertyName
           in: query
-          description: Request ID to track this action which will be processed asynchronously.
+          description: |
+            The name of the property.
+          required: false
+          schema:
+            type: string
+        - name: propertyValue
+          in: query
+          description: >
+            The value of the property. When not provided, the property is
+            deleted.
           required: false
           schema:
             type: string
@@ -290,102 +99,279 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=MODIFYCOLLECTION:
+  /admin/collections?action=MIGRATE:
     get:
       tags:
         - collection
-      summary: Modify collection
-      description: |
-        It’s possible to edit multiple attributes at a time. Changing these values only updates the z-node on ZooKeeper, they do not change the topology of the collection. For instance, increasing replicationFactor will not automatically add more replicas to the collection but will allow more ADDREPLICA commands to succeed.
+      summary: Migrate Collections
+      description: >
+        The MIGRATE command is used to migrate all documents having a given
+        routing key to another collection. The source collection will continue
+        to have the same data as-is but it will start re-routing write requests
+        to the target collection for the number of seconds specified by the
+        forward.timeout parameter. It is the responsibility of the user to
+        switch to the target collection for reads and writes after the MIGRATE
+        action completes.
 
-        An attribute can be deleted by passing an empty value. For example, yet_another_attribute_name= (with no value) will delete the yet_another_attribute_name parameter from the collection.
-      operationId: modifyCollection
+
+        The routing key specified by the split.key parameter may span multiple
+        shards on both the source and the target collections. The migration is
+        performed shard-by-shard in a single thread. One or more temporary
+        collections may be created by this command during the ‘migrate’ process
+        but they are cleaned up at the end automatically.
+
+
+        This is a long running operation and therefore using the async parameter
+        is highly recommended. If the async parameter is not specified then the
+        operation is synchronous by default and keeping a large read timeout on
+        the invocation is advised. Even with a large read timeout, the request
+        may still timeout but that doesn’t necessarily mean that the operation
+        has failed. Users should check logs, cluster state, source and target
+        collections before invoking the operation again.
+
+
+        This command works only with collections using the compositeId router.
+        The target collection must not receive any writes during the time the
+        MIGRATE command is running otherwise some writes may be lost.
+
+
+        Please note that the MIGRATE API does not perform any de-duplication on
+        the documents so if the target collection contains documents with the
+        same uniqueKey as the documents being migrated then the target
+        collection will end up with duplicate documents.
+      operationId: migrateCollection
       parameters:
         - name: collection
           in: query
-          description: |
-            The name of the collection to be modified. This parameter is required.
+          description: >
+            The name of the source collection from which documents will be
+            split. This parameter is required.
           required: true
           schema:
             type: string
-        - name: maxShardsPerNode
+        - name: target.collection
           in: query
-          description: |
-            When creating collections, the shards and/or replicas are spread across all available (i.e., live) nodes, and two replicas of the same shard will never be on the same node.
-
-            If a node is not live when the CREATE action is called, it will not get any parts of the new collection, which could lead to too many replicas being created on a single live node. Defining maxShardsPerNode sets a limit on the number of replicas the CREATE action will spread to each node.
-            
-            If the entire collection can not be fit into the live nodes, no collection will be created at all. The default maxShardsPerNode value is 1. A value of -1 means unlimited. If a policy is also specified then the stricter of maxShardsPerNode and policy rules apply.
-          required: false
-          explode: true
+          description: >
+            The name of the target collection to which documents will be
+            migrated. This parameter is required.
+          required: true
           schema:
             type: string
-        - name: replicationFactor
+        - name: split.key
           in: query
-          description: |
-            The number of replicas to be created for each shard.
-
-            This will create a NRT type of replica. If you want another type of replica, see the tlogReplicas and pullReplicas parameters below. See the section Types of Replicas for more information about replica types.
-          required: false
-          explode: true
+          description: >
+            The routing key prefix. For example, if the uniqueKey of a document
+            is "a!123", then you would use split.key=a!. This parameter is
+            required.
+          required: true
           schema:
             type: string
-        - name: autoAddReplicas
+        - name: forward.timeout
           in: query
-          description: |
-            When set to true, enables automatic addition of replicas when the number of active replicas falls below the value set for replicationFactor. This may occur if a replica goes down, for example. The default is false, which means new replicas will not be added.
-
-            While this parameter is provided as part of Solr’s set of features to provide autoscaling of clusters, it is available even when you have not implemented any other part of autoscaling (such as a policy).
+          description: >
+            The timeout, in seconds, until which write requests made to the
+            source collection for the given split.key will be forwarded to the
+            target shard. The default is 60 seconds.
           required: false
-          explode: true
           schema:
             type: string
-        - name: collection.configName
+        - name: property.name=value
           in: query
           description: |
-            Defines the name of the configuration (which must already be stored in ZooKeeper) to use for this collection.
-
-            If not provided, Solr will use the configuration of _default configset to create a new (and mutable) configset named <collectionName>.AUTOCREATED and will use it for the new collection. When such a collection is deleted, its autocreated configset will be deleted by default when it is not in use by any other collection.
+            Set core property name to value
           required: false
-          explode: true
-          schema:
-            type: string
-        - name: rule
-          in: query
-          description: |
-            Replica placement rules. See the section Rule-based Replica Placement for details.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: snitch
-          in: query
-          description: |
-            Details of the snitch provider. See the section Rule-based Replica Placement for details.
-          required: false
-          explode: true
-          schema:
-            type: string
-        - name: policy
-          in: query
-          description: |
-            Name of the collection-level policy.
-          required: false
-          explode: true
           schema:
             type: string
         - name: async
           in: query
-          description: |
-            Request ID to track this action which will be processed asynchronously.
+          description: >
+            Request ID to track this action which will be processed
+            asynchronously.
           required: false
-          explode: true
           schema:
             type: string
-        - name: readOnly
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=REINDEXCOLLECTION:
+    get:
+      tags:
+        - collection
+      summary: Reindex collection
+      description: >
+        The REINDEXCOLLECTION command reindexes a collection using existing data
+        from the source collection.
+
+
+        The target collection must not exist (and may not be an alias). If the
+        target collection name is the same as the source collection then first a
+        unique sequential name will be generated for the target collection, and
+        then after reindexing is done an alias will be created that points from
+        the source name to the actual sequentially-named target collection.
+
+
+        When reindexing is started the source collection is put in read-only
+        mode to ensure that all source documents are properly processed.
+
+
+        Using optional parameters a different index schema, collection shape
+        (number of shards and replicas) or routing parameters can be requested
+        for the target collection.
+
+
+        Reindexing is executed as a streaming expression daemon, which runs on
+        one of the source collection’s replicas. It is usually a time-consuming
+        operation so it’s recommended to execute it as an asynchronous request
+        in order to avoid request time outs. Only one reindexing operation may
+        execute concurrently for a given source collection. Long-running,
+        erroneous or crashed reindexing operations may be terminated by using
+        the abort option, which also removes partial results.
+      operationId: reindexCollection
+      parameters:
+        - name: name
           in: query
+          description: |
+            Source collection name, may be an alias. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: cmd
+          in: query
+          description: >
+            Optional command. Default command is start. Currently supported
+            commands are:
+
+            start - default, starts processing if not already running,
+
+
+            abort - aborts an already running reindexing (or clears a left-over
+            status after a crash), and deletes partial results,
+
+
+            status - returns detailed status of a running reindexing command.
           required: false
-          explode: true
+          schema:
+            type: string
+        - name: target
+          in: query
+          description: >
+            Target collection name, optional. If not specified a unique name
+            will be generated and after all documents have been copied an alias
+            will be created that points from the source collection name to the
+            unique sequentially-named collection, effectively "hiding" the
+            original source collection from regular update and search
+            operations.
+          required: false
+          schema:
+            type: string
+        - name: q
+          in: query
+          description: >
+            Optional query to select documents for reindexing. Default value is
+            *:*.
+          required: false
+          schema:
+            type: string
+        - name: fl
+          in: query
+          description: |
+            Optional list of fields to reindex. Default value is *.
+          required: false
+          schema:
+            type: string
+        - name: rows
+          in: query
+          description: >
+            Documents are transferred in batches. Depending on the average size
+            of the document large batch sizes may cause memory issues. Default
+            value is 100.
+          required: false
+          schema:
+            type: string
+        - name: collection.configName
+          in: query
+          description: >
+            Optional name of the configset for the target collection. Default is
+            the same as the source collection.
+          required: false
+          schema:
+            type: string
+        - name: removeSource
+          in: query
+          description: >
+            Optional boolean. If true then after the processing is successfully
+            finished the source collection will be deleted.
+          required: false
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: >
+            Optional request ID to track this action which will be processed
+            asynchronously.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=COLSTATUS:
+    get:
+      tags:
+        - collection
+      summary: Detailed Status of a Collection’s Indexes
+      description: |
+        The COLSTATUS command provides a detailed description of the collection status, including low-level index information about segments and field data.
+
+        This command also checks the compliance of Lucene index field types with the current Solr collection schema and indicates the names of non-compliant fields, i.e., Lucene fields with field types incompatible (or different) from the corresponding Solr field types declared in the current schema. Such incompatibilities may result from incompatible schema changes or after migration of data to a different major Solr release.
+      operationId: colStatus
+      parameters:
+        - name: collection
+          in: query
+          description: |
+            Collection name (optional). If missing then it means all collections.
+          required: true
+          schema:
+            type: string
+        - name: coreInfo
+          in: query
+          description: >
+            Optional boolean. If true then additional information will be provided about SolrCore of shard leaders.
+          required: false
+          schema:
+            type: boolean
+        - name: segments
+          in: query
+          description: >
+            Optional boolean. If true then segment information will be provided.e collection from regular update and search
+            operations.
+          required: false
+          schema:
+            type: boolean
+        - name: fieldInfo
+          in: query
+          description: >
+            Optional boolean. If true then detailed Lucene field information will be provided and their corresponding Solr schema types.
+          required: false
+          schema:
+            type: boolean
+        - name: sizeInfo
+          in: query
+          description: |
+            Optional boolean. If true then additional information about the index files size and their RAM usage will be provided.
+          required: false
           schema:
             type: boolean
       responses:
@@ -397,55 +383,72 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=LIST:
+  /admin/collections?action=BACKUP:
     get:
       tags:
         - collection
-      summary: List Collections
-      description: Fetch the names of the collections in the cluster.
-      operationId: listCollection
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
-  /admin/collections?action=RENAME:
-    get:
-      tags:
-        - collection
-      summary: Rename Collections
+      summary: Backup Collection
       description: |
-        Renaming a collection sets up a standard alias that points to the underlying collection, so that the same (unmodified) collection can now be referred to in query, index and admin operations using the new name.
+        Backs up Solr collections and associated configurations to a shared filesystem - for example a Network File System.
+        The BACKUP command will backup Solr indexes and configurations for a specified collection. The BACKUP command takes one copy from each shard for the indexes. For configurations, it backs up the configset that was associated with the collection and metadata.
 
-        This command does NOT actually rename the underlying Solr collection - it sets up a new one-to-one alias using the new name, or renames the existing alias so that it uses the new name, while still referring to the same underlying Solr collection. However, from the user’s point of view the collection can now be accessed using the new name, and the new name can be also referred to in other aliases.
-        
-        The following limitations apply:
-        
-        the existing name must be either a SolrCloud collection or a standard alias referring to a single collection. Aliases that refer to more than 1 collection are not supported.
-        
-        the existing name must not be a Routed Alias.
-        
-        the target name must not be an existing alias.
-      operationId: renameCollection
+        Backup data is stored in the repository based on the provided name and location. Each backup location can hold multiple backups for the same collection, allowing users to later restore from any of these "backup points" as desired. Within a location backups are done incrementally, so that index files uploaded previously are skipped and not duplicated in the backup repository.
+      operationId: backupCollection
       parameters:
-        - name: name
+        - name: collection
           in: query
           description: |
-            Name of the existing SolrCloud collection or an alias that refers to exactly one collection and is not a Routed Alias.
+            The name of the collection to be backed up. This parameter is required.
           required: true
           schema:
             type: string
-        - name: target
+        - name: name
           in: query
-          description: |
-            Target name of the collection. This will be the new alias that refers to the underlying SolrCloud collection. The original name (or alias) of the collection will be replaced also in the existing aliases so that they also refer to the new name. Target name must not be an existing alias.
+          description: >
+            What to name the backup that is created. This is checked to make sure it doesn’t already exist, and otherwise an error message is raised. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: location
+          in: query
+          description: >
+            The location on a shared drive for the backup command to write to. This parameter is required, unless a default location is defined on the repository configuration, or set as a cluster property.
+            
+            If the location path is on a mounted drive, the mount must be available on the node that serves as the overseer, even if the overseer node does not host a replica of the collection being backed up. Since any node can take the overseer role at any time, a best practice to avoid possible backup failures is to ensure the mount point is available on all nodes of the cluster.
+            
+            Each backup location can only hold a backup for one collection, however the same location can be used for repeated backups of the same collection. Repeated backups of the same collection are done incrementally, so that files unchanged since the last backup are not duplicated in the backup repository.
+            operations.
           required: false
           schema:
             type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: false
+          schema:
+            type: string
+        - name: repository
+          in: query
+          description: |
+            The name of a repository to be used for the backup. If no repository is specified then the local filesystem repository will be used automatically.
+          required: false
+          schema:
+            type: string
+        - name: maxNumBackupPoints
+          in: query
+          description: |
+            The upper-bound on how many backups should be retained at the backup location. If the current number exceeds this bound, older backups will be deleted until only maxNumBackupPoints backups remain. This parameter has no effect if incremental=false is specified.
+          required: false
+          schema:
+            type: string
+        - name: incremental
+          in: query
+          description: |
+            A boolean parameter allowing users to choose whether to create an incremental (incremental=true) or a "snapshot" (incremental=false) backup. If unspecified, backups are done incrementally by default. Incremental backups are preferred in all known circumstances and snapshot backups are deprecated, so this parameter should only be used after much consideration.
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: Successful operation
@@ -455,23 +458,41 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=DELETE:
+  /admin/collections?action=LISTBACKUP:
     get:
       tags:
         - collection
-      summary: Delete Collections
+      summary: List Backups
       description: |
-        Delete collection base on collection's name
-      operationId: deleteCollection
+        Lists information about each backup stored at the specified repository location. Basic metadata is returned about each backup including: the timestamp the backup was created, the Lucene version used to create the index, and the size of the backup both in number of files and total filesize.
+        
+        The file structure used by Solr internally to represent backups changed in 8.9.0. While backups created prior to this format change can still be restored, the LISTBACKUP and DELETEBACKUP API commands are only valid on this newer format. Attempting to use them on a location holding an older backup will result in an error message.
+      operationId: listBackup
       parameters:
         - name: name
           in: query
           description: |
-            The name of the collection to delete. This parameter is required.
+            The name of the backups to list. The backup name usually corresponds to the collection-name, but isn’t required to. This parameter is required.
           required: true
           schema:
             type: string
-        - name: target
+        - name: location
+          in: query
+          description: |
+            The repository location to list backups from. This parameter is required, unless a default location is defined on the repository configuration, or set as a cluster property.
+
+            If the location path is on a mounted drive, the mount must be available on the node that serves as the overseer, even if the overseer node does not host a replica of the collection being backed up. Since any node can take the overseer role at any time, a best practice to avoid possible backup failures is to ensure the mount point is available on all nodes of the cluster.
+          required: false
+          schema:
+            type: string
+        - name: repository
+          in: query
+          description: |
+            The name of a repository to be used for accessing backup information. If no repository is specified then the local filesystem repository will be used automatically.
+          required: false
+          schema:
+            type: string
+        - name: location
           in: query
           description: |
             Request ID to track this action which will be processed asynchronously.
@@ -487,83 +508,179 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/{collection}/select:
+  /admin/collections?action=RESTORE:
     get:
       tags:
-        - query
-      summary: Query document
+        - collection
+      summary: Restore collection
       description: |
-        Query document in a document
-      operationId: query document
+        The RESTORE operation will replace the content of a collection with files from the specified backup.
+
+        If the provided collection value matches an existing collection, Solr will use it for restoration, assuming it is compatible (same number of shards, etc.) with the stored backup files. If the provided collection value doesn’t exist, a new collection with that name is created in a way compatible with the stored backup files. The collection created will be have the same number of shards and replicas as the original collection, preserving routing information, etc. Optionally, you can override some parameters documented below.
+        
+        While restoring, if a configset with the same name exists in ZooKeeper then Solr will reuse that, or else it will upload the backed up configset in ZooKeeper and use that.
+        
+        You can use the collection CREATEALIAS command to make sure clients don’t need to change the endpoint to query or index against the newly restored collection.
+      operationId: restoreCollection
       parameters:
         - name: collection
-          in: path
+          in: query
           description: |
-            The name of the collection to query.
+            The collection where the indexes will be restored into. This parameter is required
           required: true
           schema:
             type: string
-        - name: q
+        - name: name
           in: query
           description: |
-            The query string used to search the index. It can contain one or more query clauses, each of which consists of a field name, an operator, and a value. For example, the query string title:Solr AND author:"John Doe" would search for documents that have "Solr" in the title field and "John Doe" in the author field.
+            The name of the existing backup that you want to restore. This parameter is required.
           required: true
           schema:
             type: string
-        - name: fq
+        - name: location
           in: query
           description: |
-            The filter query used to further refine the search. For example, the filter query price:[10 TO 100] would limit the search to documents where the price field is between 10 and 100.
+            The location on a shared drive for the RESTORE command to read from. Alternately it can be set as a cluster property.
           required: false
           schema:
             type: string
-        - name: sort 
+        - name: async
           in: query
           description: |
-            The field to sort the results on, and the order of the sort. For example, the sort parameter price asc would sort the results by the price field in ascending order.
+            Request ID to track this action which will be processed asynchronously.
           required: false
           schema:
             type: string
-        - name: start 
+        - name: repository
           in: query
           description: |
-            The starting index for the result set. For example, to retrieve the first 10 documents that match the query, you would use start=0 and rows=10.
+            The name of a repository to be used for the backup. If no repository is specified then the local filesystem repository will be used automatically.
+          required: false
+          schema:
+            type: string
+        - name: backupId
+          in: query
+          description: |
+            The ID of a specific backup point to restore from.
+
+            Backup locations can hold multiple backups of the same collection. This parameter allows users to choose which of those backups should be used to restore from. If not specified the most recent backup point is used.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=DELETEBACKUP:
+    get:
+      tags:
+        - collection
+      summary: Delete backup files from the remote repository
+      description: |
+        Solr allows storing multiple backups for the same collection at any given logical "location". These backup points are each given an identifier (backupId) which can be used to delete them specifically with this API. Alternatively Solr can be told to keep the last maxNumBackupPoints backups, deleting everything else at the given location. Deleting backup points in these ways can orphan index files that are no longer referenced by any backup points. These orphaned files can be detected and deleted using the purgeUnused option. See the parameter descriptions below for more information.
+      operationId: restoreCollection
+      parameters:
+        - name: name
+          in: query
+          description: |
+            The backup name to delete backup files from. This parameter is required.
           required: true
           schema:
-            type: number
-            default: 0
-        - name: rows
+            type: string
+        - name: location
           in: query
           description: |
-            The number of rows to return in the result set.
+            The repository location to delete backups from. This parameter is required, unless a default location is defined on the repository configuration, or set as a cluster property.
+
+            If the location path is on a mounted drive, the mount must be available on the node that serves as the overseer, even if the overseer node does not host a replica of the collection being backed up. Since any node can take the overseer role at any time, a best practice to avoid possible backup failures is to ensure the mount point is available on all nodes of the cluster.
+          required: false
+          schema:
+            type: string
+        - name: repository
+          in: query
+          description: |
+            The name of a repository to be used for deleting backup files. If no repository is specified then the local filesystem repository will be used automatically.
+          required: false
+          schema:
+            type: string
+        - name: backupId
+          in: query
+          description: |
+            Explicitly specify a single backup-ID to delete. Only one of backupId, maxNumBackupPoints, and purgeUnused may be specified per DELETEBACKUP request.
+          required: false
+          schema:
+            type: string
+        - name: maxNumBackupPoints
+          in: query
+          description: |
+            Specify how many backups should be retained, deleting all others. Only one of backupId, maxNumBackupPoints, and purgeUnused may be specified per DELETEBACKUP request.
+          required: false
+          schema:
+            type: string
+        - name: purgeUnused
+          in: query
+          description: |
+            Solr’s incremental backup support can orphan files if the backups referencing them are deleted. The purgeUnused flag parameter triggers a scan to detect these orphaned files and delete them. Administrators doing repeated backups at the same location should plan on using this parameter sporadically to reclaim disk space. Only one of backupId, maxNumBackupPoints, and purgeUnused may be specified per DELETEBACKUP request.
+          required: false
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=REBALANCELEADERS:
+    get:
+      tags:
+        - collection
+      summary: Rebalance Leaders
+      description: |
+        Reassigns leaders in a collection according to the preferredLeader property across active nodes.
+        
+        Leaders are assigned in a collection according to the preferredLeader property on active nodes. This command should be run after the preferredLeader property has been assigned via the BALANCESHARDUNIQUE or ADDREPLICAPROP commands.
+      operationId: rebalanceLeaders
+      parameters:
+        - name: collection
+          in: query
+          description: |
+            The name of the collection to rebalance preferredLeaders on. This parameter is required.
           required: true
           schema:
-            type: number
-            default: 10
-        - name: fl
+            type: string
+        - name: maxAtOnce
           in: query
           description: |
-            The fl parameter limits the information included in a query response to a specified list of fields. The fields must be either stored="true" or docValues="true"
+            The maximum number of reassignments to have queue up at once. Values <=0 are use the default value Integer.MAX_VALUE.
+
+            When this number is reached, the process waits for one or more leaders to be successfully assigned before adding more to the queue.
+          required: false
+          schema:
+            type: string
+        - name: maxWaitSeconds
+          in: query
+          description: |
+            Defaults to 60. This is the timeout value when waiting for leaders to be reassigned. If maxAtOnce is less than the number of reassignments that will take place, this is the maximum interval that any single wait for at least one reassignment.
             
-            The field list can be specified as a space-separated or comma-separated list of field names. The string "score" can be used to indicate that the score of each document for the particular query should be returned as a field. The wildcard character * selects all the fields in the document which are either stored="true" or docValues="true" and useDocValuesAsStored="true" (which is the default when docValues are enabled). You can also add pseudo-fields, functions and transformers to the field list request.
+            For example, if 10 reassignments are to take place and maxAtOnce is 1 and maxWaitSeconds is 60, the upper bound on the time that the command may wait is 10 minutes.
           required: false
           schema:
             type: string
-        - name: wt
-          in: query
-          description: |
-            The response format. Solr supports several response formats, including JSON, XML, and CSV.
-          required: false
-          schema:
-            type: string
-            default: json
-            enum:
-              - json
-              - xml
-              - python
-              - php
-              - csv
-              - ruby
       responses:
         '200':
           description: Successful operation
