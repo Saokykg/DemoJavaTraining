@@ -29,26 +29,12 @@ info:
 servers:
   - url: https://replace_host_url
 tags:
-  - name: Collection Aliasing
+  - name: Replica Management
     description: >-
-      A collection alias is a virtual collection which Solr treats the same as a normal collection. The alias collection may point to one or more real collections.
-
-      Some use cases for collection aliasing:
-      
-      - Time series data
-        
-      - Reindexing content behind the scenes
+      A replica is a physical copy of a shard.
     externalDocs:
       description: Find out more
-      url: https://solr.apache.org/guide/8_11/collection-aliasing.html
-  - name: Shard Management
-    description: >-
-      In SolrCloud, a shard is a logical partition of a collection. This partition stores part of the entire index for a collection.
-
-      The number of shards you have helps to determine how many documents a single collection can contain in total, and also impacts search performance.
-    externalDocs:
-      description: Find out more
-      url: https://solr.apache.org/guide/8_11/shard-management.html#splitshard
+      url: https://solr.apache.org/guide/8_11/replica-management.html
 components:
   securitySchemes:
     auth:
@@ -58,177 +44,108 @@ components:
 security:
   - auth: []
 paths:
-  /admin/collections?action=SPLITSHARD:
+  /admin/collections?action=ADDREPLICA:
     get:
       tags:
-      - Shard Management
-      summary: Split a Shard
+      - Replica Management
+      summary: Add Replica
       description: |
-        The shard splitting API command in SolrCloud allows an existing shard to be broken into two new shards, while still accepting query and indexing requests. The new shards will have the same number of replicas as the original shard. A soft commit is automatically issued after the split operation, so documents are visible on sub-shards. An explicit commit is not necessary as the index is automatically persisted to disk. The split is performed by dividing the original shard's hash range into two equal partitions and dividing up the documents accordingly. The API allows for further control over how the split occurs with the ranges and split.key parameters. The newly created shards will have as many replicas as the parent shard of the same replica types. The node running the leader of the parent shard needs to have enough free disk space for the split to succeed, especially when using splitMethod=rewrite. The first replicas of the resulting sub-shards will always be placed on the shard leader node, which may cause Autoscaling policy violations. As shard splitting can be a long-running process, it's recommended to run it as an asynchronous call to avoid timeouts.
-      operationId: splitShard
-      parameters: 
-        - name: name
-          in: collection
-          description: |
-            The name of the collection that includes the shard to be split. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: shard
-          in: query
-          description: |
-            The name of the shard to be split. This parameter is required when split.key is not specified.
-          required: true
-          schema:
-            type: string
-        - name: ranges
-          in: query
-          description: |
-            A comma-separated list of hash ranges in hexadecimal, such as ranges=0-1f4,1f5-3e8,3e9-5dc.
-            
-            This parameter can be used to divide the original shard’s hash range into arbitrary hash range intervals specified in hexadecimal. For example, if the original hash range is 0-1500 then adding the parameter: ranges=0-1f4,1f5-3e8,3e9-5dc will divide the original shard into three shards with hash range 0-500, 501-1000, and 1001-1500 respectively.
-          required: true
-          schema:
-            type: string
-        - name: split.key
-          in: query
-          description: |
-            The key to use for splitting the index.
-
-            This parameter can be used to split a shard using a route key such that all documents of the specified route key end up in a single dedicated sub-shard. Providing the shard parameter is not required in this case because the route key is enough to figure out the right shard. A route key which spans more than one shard is not supported.
-          required: true
-          schema:
-            type: string
-        - name: numSubShards
-          in: query
-          description: |
-            The number of sub-shards to split the parent shard into. Allowed values for this are in the range of 2-8 and defaults to 2.
-            
-            This parameter can only be used when ranges or split.key are not specified.
-          required: true
-          schema:
-            type: string
-        - name: splitMethod
-          in: query
-          description: |
-            Currently two methods of shard splitting are supported:
-            
-            - splitMethod=rewrite (default) after selecting documents to retain in each partition this method creates sub-indexes from scratch, which is a lengthy CPU- and I/O-intensive process but results in optimally-sized sub-indexes that don’t contain any data from documents not belonging to each partition.
-            
-            - splitMethod=link uses file system-level hard links for creating copies of the original index files and then only modifies the file that contains the list of deleted documents in each partition. This method is many times quicker and lighter on resources than the rewrite method but the resulting sub-indexes are still as large as the original index because they still contain data from documents not belonging to the partition. This slows down the replication process and consumes more disk space on replica nodes (the multiple hard-linked copies don’t occupy additional disk space on the leader node, unless hard-linking is not supported).
-          required: true
-          schema:
-            type: string
-        - name: splitFuzz
-          in: query
-          description: |
-            A float value (default is 0.0f, must be smaller than 0.5f) that allows to vary the sub-shard ranges by this percentage of total shard range, odd shards being larger and even shards being smaller.
-          required: true
-          schema:
-            type: string
-        - name: property.name=value
-          in: query
-          description: |
-            Set core property name to value. See the section Defining core.properties for details on supported properties and values.
-          required: true
-          schema:
-            type: string
-        - name: waitForFinalState
-          in: query
-          description: |
-            If true, the request will complete only when all affected replicas become active. The default is false, which means that the API will return the status of the single action, which may be before the new replica is online and active.
-          required: true
-          schema:
-            type: boolean
-        - name: timing
-          in: query
-          description: |
-            If true then each stage of processing will be timed and a timing section will be included in response.
-          required: true
-          schema:
-            type: boolean
-        - name: async
-          in: query
-          description: |
-            Request ID to track this action which will be processed asynchronously
-          required: true
-          schema:
-            type: string
-        - name: splitByPrefix
-          in: query
-          description: |
-            If true, the split point will be selected by taking into account the distribution of compositeId values in the shard. A compositeId has the form <prefix>!<suffix>, where all documents with the same prefix are colocated on in the hash space. If there are multiple prefixes in the shard being split, then the split point will be selected to divide up the prefixes into as equal sized shards as possible without splitting any prefix. If there is only a single prefix in a shard, the range of the prefix will be divided in half.
-
-            The id field is usually scanned to determine the number of documents with each prefix. As an optimization, if an optional field called id_prefix exists and has the document prefix indexed (including the !) for each document, then that will be used to generate the counts.
-          required: true
-          schema:
-            type: boolean
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
-  /admin/collections?action=CREATESHARD:
-    get:
-      tags:
-      - Shard Management
-      summary: Create a Shard
-      description: |
-        Shards can only created with this API for collections that use the 'implicit' router (i.e., when the collection was created, router.name=implicit). A new shard with a name can be created for an existing 'implicit' collection.
-      operationId: createShard
+        Add one or more replicas to a shard in a collection. The node name can be specified if the replica is to be created in a specific node. Otherwise, a set of nodes can be specified and the most suitable ones among them will be chosen to create the replica(s).
+      operationId: addReplica
       parameters:
         - name: collection
           in: query
           description: |
-            The name of the collection that includes the shard to be split. This parameter is required.
+            The name of the collection where the replica should be created. This parameter is required.
           required: true
           schema:
             type: string
         - name: shard
           in: query
           description: |
-            The name of the shard to be created. This parameter is required.
+            The name of the shard to which replica is to be added.
+
+            If shard is not specified, then _route_ must be.
+          required: false
+          schema:
+            type: string
+        - name: _route_
+          in: query
+          description: |
+            If the exact shard name is not known, users may pass the _route_ value and the system would identify the name of the shard.
+
+            Ignored if the shard parameter is also specified.
+          required: false
+          schema:
+            type: string
+        - name: node
+          in: query
+          description: |
+            The name of the node where the replica should be created (optional).
           required: false
           schema:
             type: string
         - name: createNodeSet
           in: query
           description: |
-            Allows defining the nodes to spread the new collection across. If not provided, the CREATESHARD operation will create shard-replica spread across all live Solr nodes.
+            A comma-separated list of nodes among which the best ones will be chosen to place the replicas (optional)
 
             The format is a comma-separated list of node_names, such as localhost:8983_solr,localhost:8984_solr,localhost:8985_solr.
+          required: false
+          schema:
+            type: string
+        - name: instanceDir
+          in: query
+          description: |
+            The instanceDir for the core that will be created.
+          required: false
+          schema:
+            type: string
+        - name: dataDir
+          in: query
+          description: |
+            The directory in which the core should be created.
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: |
+            The type of replica to create. These possible values are allowed:
+            
+            nrt: The NRT type maintains a transaction log and updates its index locally. This is the default and the most commonly used.
+            
+            tlog: The TLOG type maintains a transaction log but only updates its index via replication.
+            
+            pull: The PULL type does not maintain a transaction log and only updates its index via replication. This type is not eligible to become a leader.
           required: false
           schema:
             type: string
         - name: nrtReplicas
           in: query
           description: |
-            The number of nrt replicas that should be created for the new shard (optional, the defaults for the collection is used if omitted)
+            The number of nrt replicas that should be created (optional, defaults to 1 if type is nrt otherwise 0).
           required: false
           schema:
             type: string
         - name: tlogReplicas
           in: query
           description: |
-            The number of tlog replicas that should be created for the new shard (optional, the defaults for the collection is used if omitted)
+            The number of tlog replicas that should be created (optional, defaults to 1 if type is tlog otherwise 0).
           required: false
           schema:
             type: string
         - name: pullReplicas
           in: query
           description: |
-            The number of pull replicas that should be created for the new shard (optional, the defaults for the collection is used if omitted)
+            The number of pull replicas that should be created (optional, defaults to 1 if type is pull otherwise 0).
           required: false
           schema:
             type: string
         - name: property.name=value
           in: query
           description: |
-            Set core property name to value. See the section Defining core.properties for details on supported properties and values.
+            Set core property name to value. See Defining core.properties for details about supported properties and values.
           required: false
           schema:
             type: string
@@ -242,7 +159,7 @@ paths:
         - name: async
           in: query
           description: |
-            Request ID to track this action which will be processed asynchronously.
+            Set core property name to value. See Defining core.properties for details about supported properties and values.
           required: false
           schema:
             type: string
@@ -255,47 +172,63 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=DELETESHARD:
+  /admin/collections?action=MOVEREPLICA:
     get:
       tags:
-      - Shard Management
-      summary: Delete a Shard
+      - Replica Management
+      summary: Move a Replica to a New Node
       description: |
-        Deleting a shard will unload all replicas of the shard, remove them from clusterstate.json, and (by default) delete the instanceDir and dataDir for each replica. It will only remove shards that are inactive, or which have no range given for custom sharding.
-      operationId: deleteShard
+        This command moves a replica from one node to another node by executing ADDREPLICA on the destination and then DELETEREPLICA on the source. If this command is interrupted or times out before the ADDREPLICA operation produces a replica in an active state, the DELETEREPLICA will not occur. Timeouts do not cancel the ADDREPLICA, and will result in extra shards. In case of shared filesystems the dataDir will be reused.
+
+        If this command is used on a collection where more than one replica from the same shard exists on the same node, and the shard and sourceNode parameters match more than one replica, the replica selected is not deterministic (currently it’s random).
+      operationId: moveReplica
       parameters:
         - name: collection
           in: query
           description: |
-            The name of the collection that includes the shard to be deleted. This parameter is required.
+            The name of the collection. This parameter is required.
           required: true
+          schema:
+            type: string
+        - name: targetNode
+          in: query
+          description: |
+            The name of the destination node. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: sourceNode
+          in: query
+          description: |
+            The name of the node that contains the replica to move. This parameter is required unless replica is specified. If replica is specified this parameter is ignored.
+          required: false
           schema:
             type: string
         - name: shard
           in: query
           description: |
-            The name of the shard to be deleted. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: deleteInstanceDir
-          in: query
-          description: |
-            By default Solr will delete the entire instanceDir of each replica that is deleted. Set this to false to prevent the instance directory from being deleted.
+            The name of the shard for which a replica should be moved. This parameter is required unless replica is specified. If replica is specified, this parameter is ignored.
           required: false
           schema:
             type: string
-        - name: deleteDataDir
+        - name: replica
           in: query
           description: |
-            By default Solr will delete the dataDir of each replica that is deleted. Set this to false to prevent the data directory from being deleted.
+            The name of the replica to move. This parameter is required unless shard and sourceNode are specified, however this parameter has precedence over those two parameters.
           required: false
           schema:
             type: string
-        - name: deleteIndex
+        - name: timeout
           in: query
           description: |
-            By default Solr will delete the index of each replica that is deleted. Set this to false to prevent the index directory from being deleted.
+            The number of seconds to wait for the replica to be live in the new location before deleting the replica in the old location. Defaults to 600 seconds. Deletion will not occur and creation will not be rolled back in the event of a timeout, potentially leaving an extra replica. Presently, this parameter is ignored if the replica is an hdfs replica.
+          required: false
+          schema:
+            type: string
+        - name: inPlaceMove
+          in: query
+          description: |
+            For replicas that use shared filesystems allow 'in-place' move that reuses shared data. Defaults to true, but is ignored if the replica does not have the property shared_storage with a value of true
           required: false
           schema:
             type: string
@@ -315,14 +248,16 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=FORCELEADER:
+  /admin/collections?action=DELETEREPLICA :
     get:
       tags:
-      - Shard Management
-      summary: Force Shard Leader
+      - Replica Management
+      summary: Delete a Replica
       description: |
-        In the unlikely event of a shard losing its leader, this command can be invoked to force the election of a new leader.
-      operationId: forceShardLeader
+        Deletes a named replica from the specified collection and shard.
+        
+        If the corresponding core is up and running the core is unloaded, the entry is removed from the clusterstate, and (by default) delete the instanceDir and dataDir. If the node/core is down, the entry is taken off the clusterstate and if the core comes up later it is automatically unregistered.
+      operationId: deleteReplica
       parameters:
         - name: collection
           in: query
@@ -334,8 +269,59 @@ paths:
         - name: shard
           in: query
           description: |
-            The name of the shard where leader election should occur. This parameter is required.
+            The name of the shard that includes the replica to be removed. This parameter is required.
           required: true
+          schema:
+            type: string
+        - name: replica
+          in: query
+          description: |
+            The name of the node that contains the replica to move. This parameter is required unless replica is specified. If replica is specified this parameter is ignored.
+          required: false
+          schema:
+            type: string
+        - name: count
+          in: query
+          description: |
+            The number of replicas to remove. If the requested number exceeds the number of replicas, no replicas will be deleted. If there is only one replica, it will not be removed.
+            
+            If replica is used instead, this parameter is not required. Otherwise, this parameter must be supplied.
+          required: false
+          schema:
+            type: string
+        - name: deleteInstanceDir
+          in: query
+          description: |
+            By default Solr will delete the entire instanceDir of the replica that is deleted. Set this to false to prevent the instance directory from being deleted.
+          required: false
+          schema:
+            type: string
+        - name: deleteDataDir
+          in: query
+          description: |
+            By default Solr will delete the dataDir of the replica that is deleted. Set this to false to prevent the data directory from being deleted.
+          required: false
+          schema:
+            type: string
+        - name: deleteIndex
+          in: query
+          description: |
+            By default Solr will delete the index of the replica that is deleted. Set this to false to prevent the index directory from being deleted.
+          required: false
+          schema:
+            type: string
+        - name: onlyIfDown
+          in: query
+          description: |
+            When set to true, no action will be taken if the replica is active. Default false.
+          required: false
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: false
           schema:
             type: string
       responses:
@@ -347,52 +333,63 @@ paths:
           description: Not found
         '405':
           description: Validation exception
+  /admin/collections?action=ADDREPLICAPROP :
+    get:
+      tags:
+      - Replica Management
+      summary: Add Replica Property
+      description: |
+        Assign an arbitrary property to a particular replica and give it the value specified. If the property already exists, it will be overwritten with the new value.
+      operationId: addReplicaProp
+      parameters:
+        - name: collection
+          in: query
+          description: |
+            The name of the collection the replica belongs to. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: shard
+          in: query
+          description: |
+            The name of the shard the replica belongs to. This parameter is required
+          required: true
+          schema:
+            type: string
+        - name: replica
+          in: query
+          description: |
+            The replica, e.g., core_node1. This parameter is required.
+          required: false
+          schema:
+            type: string
+        - name: property
+          in: query
+          description: |
+            The name of the property to add. This property is required.
 
-  /admin/collections?action=LISTALIASES:
-    get:
-      tags:
-      - Collection Aliasing
-      summary: List of all aliases in the cluster
-      description: |
-        The LISTALIASES action does not take any parameters.
-      operationId: listAlias
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
-  /admin/collections?action=ALIASPROP:
-    get:
-      tags:
-      - Collection Aliasing
-      summary: Modify Alias Properties for a Collection
-      description: |
-        The ALIASPROP action modifies the properties (metadata) on an alias. If a key is set with a value that is empty it will be removed.
-      operationId: aliasProp
-      parameters:
-        - name: name
+            This will have the literal property. prepended to distinguish it from system-maintained properties. So these two forms are equivalent:
+
+            property=special and property=property.special
+          required: false
+          schema:
+            type: string
+        - name: property.value
           in: query
           description: |
-            The alias name on which to set properties. This parameter is required.
+            The value to assign to the property. This parameter is required.
           required: true
           schema:
             type: string
-        - name: property.*
+        - name: shardUnique
           in: query
           description: |
-            The name of the property to be modified replaces '*', the value for the parameter is passed as the value for the property.
-          required: true
-          schema:
-            type: string
-        - name: async
-          in: query
-          description: |
-            Request ID to track this action which will be processed asynchronously.
-          required: true
+            If true, then setting this property in one replica will remove the property from all other replicas in that shard. The default is false.
+
+            There is one pre-defined property preferredLeader for which shardUnique is forced to true and an error returned if shardUnique is explicitly set to false.
+            
+            PreferredLeader is a boolean property. Any value assigned that is not equal (case insensitive) to true will be interpreted as false for preferredLeader.
+          required: false
           schema:
             type: string
       responses:
@@ -404,27 +401,45 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=DELETEALIAS:
+  /admin/collections?action=DELETEREPLICAPROP:
     get:
       tags:
-      - Collection Aliasing
-      summary: Delete alias
+      - Replica Management
+      summary: DELETEREPLICAPROP
       description: |
-        Delete alias.
-      operationId: deleteAlias
+        Deletes an arbitrary property from a particular replica.
+      operationId: deleteReplicaProp
       parameters:
-        - name: name
+        - name: collection
           in: query
           description: |
-            The name of the alias to delete. This parameter is required.
+            The name of the collection the replica belongs to. This parameter is required.
           required: true
           schema:
             type: string
-        - name: async
+        - name: shard
           in: query
           description: |
-            Request ID to track this action which will be processed asynchronously.
+            The name of the shard the replica belongs to. This parameter is required
           required: true
+          schema:
+            type: string
+        - name: replica
+          in: query
+          description: |
+            The replica, e.g., core_node1. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: property
+          in: query
+          description: |
+            The name of the property to add. This property is required.
+
+            This will have the literal property. prepended to distinguish it from system-maintained properties. So these two forms are equivalent:
+
+            property=special and property=property.special
+          required: false
           schema:
             type: string
       responses:
