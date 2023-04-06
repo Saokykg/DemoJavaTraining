@@ -61,7 +61,7 @@ paths:
   /admin/collections?action=SPLITSHARD:
     get:
       tags:
-      - Collection Aliasing
+      - Shard Management
       summary: Split a Shard
       description: |
         The shard splitting API command in SolrCloud allows an existing shard to be broken into two new shards, while still accepting query and indexing requests. The new shards will have the same number of replicas as the original shard. A soft commit is automatically issued after the split operation, so documents are visible on sub-shards. An explicit commit is not necessary as the index is automatically persisted to disk. The split is performed by dividing the original shard's hash range into two equal partitions and dividing up the documents accordingly. The API allows for further control over how the split occurs with the ranges and split.key parameters. The newly created shards will have as many replicas as the parent shard of the same replica types. The node running the leader of the parent shard needs to have enough free disk space for the split to succeed, especially when using splitMethod=rewrite. The first replicas of the resulting sub-shards will always be placed on the shard leader node, which may cause Autoscaling policy violations. As shard splitting can be a long-running process, it's recommended to run it as an asynchronous call to avoid timeouts.
@@ -172,49 +172,10 @@ paths:
           description: Not found
         '405':
           description: Validation exception
-  /admin/collections?action=ALIASPROP:
-    get:
-      tags:
-      - Collection Aliasing
-      summary: Modify Alias Properties for a Collection
-      description: |
-        The ALIASPROP action modifies the properties (metadata) on an alias. If a key is set with a value that is empty it will be removed.
-      operationId: aliasProp
-      parameters:
-        - name: name
-          in: query
-          description: |
-            The alias name on which to set properties. This parameter is required.
-          required: true
-          schema:
-            type: string
-        - name: property.*
-          in: query
-          description: |
-            The name of the property to be modified replaces '*', the value for the parameter is passed as the value for the property.
-          required: false
-          schema:
-            type: string
-        - name: async
-          in: query
-          description: |
-            Request ID to track this action which will be processed asynchronously.
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-        '405':
-          description: Validation exception
   /admin/collections?action=CREATESHARD:
     get:
       tags:
-      - Collection Aliasing
+      - Shard Management
       summary: Create a Shard
       description: |
         Shards can only created with this API for collections that use the 'implicit' router (i.e., when the collection was created, router.name=implicit). A new shard with a name can be created for an existing 'implicit' collection.
@@ -297,7 +258,7 @@ paths:
   /admin/collections?action=DELETESHARD:
     get:
       tags:
-      - Collection Aliasing
+      - Shard Management
       summary: Delete a Shard
       description: |
         Deleting a shard will unload all replicas of the shard, remove them from clusterstate.json, and (by default) delete the instanceDir and dataDir for each replica. It will only remove shards that are inactive, or which have no range given for custom sharding.
@@ -343,6 +304,127 @@ paths:
           description: |
             Request ID to track this action which will be processed asynchronously.
           required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=FORCELEADER:
+    get:
+      tags:
+      - Shard Management
+      summary: Force Shard Leader
+      description: |
+        In the unlikely event of a shard losing its leader, this command can be invoked to force the election of a new leader.
+      operationId: forceShardLeader
+      parameters:
+        - name: collection
+          in: query
+          description: |
+            The name of the collection. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: shard
+          in: query
+          description: |
+            The name of the shard where leader election should occur. This parameter is required.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+
+  /admin/collections?action=LISTALIASES:
+    get:
+      tags:
+      - Collection Aliasing
+      summary: List of all aliases in the cluster
+      description: |
+        The LISTALIASES action does not take any parameters.
+      operationId: listAlias
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=ALIASPROP:
+    get:
+      tags:
+      - Collection Aliasing
+      summary: Modify Alias Properties for a Collection
+      description: |
+        The ALIASPROP action modifies the properties (metadata) on an alias. If a key is set with a value that is empty it will be removed.
+      operationId: aliasProp
+      parameters:
+        - name: name
+          in: query
+          description: |
+            The alias name on which to set properties. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: property.*
+          in: query
+          description: |
+            The name of the property to be modified replaces '*', the value for the parameter is passed as the value for the property.
+          required: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+        '405':
+          description: Validation exception
+  /admin/collections?action=DELETEALIAS:
+    get:
+      tags:
+      - Collection Aliasing
+      summary: Delete alias
+      description: |
+        Delete alias.
+      operationId: deleteAlias
+      parameters:
+        - name: name
+          in: query
+          description: |
+            The name of the alias to delete. This parameter is required.
+          required: true
+          schema:
+            type: string
+        - name: async
+          in: query
+          description: |
+            Request ID to track this action which will be processed asynchronously.
+          required: true
           schema:
             type: string
       responses:
