@@ -1,0 +1,13 @@
+.drawer {
+  height: 100%;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.pushed {
+  margin-right: 300px;
+}
